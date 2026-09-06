@@ -104,6 +104,14 @@
    A solid-body button is one line: the shaded lower band and the focus
    highlight are mixed from its base, so a new colour cannot drift out of
    step with the rest of the button. Hues come from src/app/palette.ts. */
+/* A smaller pixel unit for the smaller buttons – the glyph is nine cells
+   across, so at 3px it is 27 wide and all but fills a 36px button. Declared
+   here rather than as an inline utility because it has to beat `.pixel-btn`'s
+   own --u, and at equal specificity that comes down to source order. */
+.pixel-btn--compact {
+  --u: 2px;
+}
+
 .pixel-btn {
   --shade: color-mix(in srgb, var(--base) 80%, #000);
   --light: color-mix(in srgb, var(--base) 72%, #fff);
@@ -116,7 +124,6 @@
 .pixel-btn--blue    { --base: var(--c-blue); }
 .pixel-btn--red     { --base: var(--c-red); }
 .pixel-btn--purple  { --base: var(--c-purple); }
-.pixel-btn--pink    { --base: var(--c-pink); }
 .pixel-btn--orange  { --base: var(--c-orange); }
 .pixel-btn--green   { --base: var(--c-green); }
 .pixel-btn--brand   { --base: var(--c-brand); }
@@ -466,6 +473,8 @@
 /* Sized to the full height of the bar so there is something to hit; the bar
    is deeper than a decorative one would be for that reason. */
 .panel-close {
+  /* Two pixels per sprite cell at either size: at three the 27px glyph fills
+     a 28px bar with nothing around it. */
   --u: 2px;
   height: 100%;
   aspect-ratio: 1;
@@ -488,11 +497,7 @@
   outline: none;
 }
 
-@media (min-width: 640px) {
-  .panel-close {
-    --u: 3px;
-  }
-}
+
 
 /* The rules and the divider: runs of dashes rather than solid lines, drawn
    as gradients so the dash and the gap are set in whole pixels. `border-style:

@@ -15,7 +15,6 @@ export const PALETTE = {
   gold: "#ffd83d",
   red: "#e02a2a",
   purple: "#a658f9",
-  pink: "#f4609c",
   orange: "#ffa500",
   cyan: "#7fe9ff",
 } as const;

@@ -40,7 +40,7 @@ const ARROW_HEADINGS: Record<string, Direction> = {
 const DPAD = [
   { direction: "LEFT", rotate: 270, label: "Move left", color: "red" },
   { direction: "UP", rotate: 0, label: "Move up", color: "blue" },
-  { direction: "DOWN", rotate: 180, label: "Move down", color: "pink" },
+  { direction: "DOWN", rotate: 180, label: "Move down", color: "purple" },
   { direction: "RIGHT", rotate: 90, label: "Move right", color: "orange" },
 ] as const;
 
