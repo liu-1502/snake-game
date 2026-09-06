@@ -143,30 +143,32 @@
    the icon's worst-case background from #d4d4d4 to #ffffff, which is what
    buys the brighter inks below. Depth now comes from the coloured outline
    and the drop shadow instead of the shading band. */
-/* White body, coloured icon, and the same dark outline every other button
-   has – the colour is carried by the sprite alone.
+/* Pale body, coloured icon, and the same dark outline every other button
+   has – the colour is carried by the sprite alone. Just off white: at pure
+   white these read as four bright blocks against a black page, and the step
+   down costs the inks about a sixth of their contrast.
 
    Blue and red clear the 3:1 floor for graphics against the white body
    comfortably – 7.8:1 and 4.6:1. The orange does not, at 2.1:1, and is kept
    bright by choice: every tone dark enough to pass reads as brown rather
    than as the sun it draws. */
 .pixel-btn--white-blue {
-  --base: #ffffff; --shade: #ffffff;
+  --base: #ececec; --shade: #ececec;
   --light: var(--c-blue); --ink: var(--c-blue);
 }
 
 .pixel-btn--white-red {
-  --base: #ffffff; --shade: #ffffff;
+  --base: #ececec; --shade: #ececec;
   --light: var(--c-red); --ink: var(--c-red);
 }
 
 .pixel-btn--white-green {
-  --base: #ffffff; --shade: #ffffff;
+  --base: #ececec; --shade: #ececec;
   --light: var(--c-green); --ink: var(--c-green);
 }
 
 .pixel-btn--white-orange {
-  --base: #ffffff; --shade: #ffffff;
+  --base: #ececec; --shade: #ececec;
   --light: var(--c-orange); --ink: var(--c-orange);
 }
 
