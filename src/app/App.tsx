@@ -37,7 +37,9 @@ export default function App() {
       /* The palette rides on the root as custom properties so the stylesheet
          and the components share one definition – see src/app/palette.ts. */
       style={paletteVars as CSSProperties}
-      className={`neon-stage${isBoosted ? " neon-stage--boost" : ""} size-full min-h-screen flex flex-col items-center justify-center p-2 min-[375px]:p-4 sm:p-8 bg-background text-foreground`}
+      className={`neon-stage${isBoosted ? " neon-stage--boost" : ""}${
+        isGameOver ? " neon-stage--over" : ""
+      } size-full min-h-screen flex flex-col items-center justify-center p-2 min-[375px]:p-4 sm:p-8 bg-background text-foreground`}
     >
       {/* Page dressing. Sits behind the game on its own layer. */}
       <div className="starfield" aria-hidden="true" />

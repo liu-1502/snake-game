@@ -49,6 +49,13 @@ export const PALETTE_DEEP = {
  */
 export const BRAND: PaletteName = "green";
 
+/**
+ * What the brand becomes once the run is over – the set, the sign and the end
+ * panel all take it at once, so the whole machine reads as having tripped
+ * rather than one panel announcing it.
+ */
+export const BRAND_ALERT: PaletteName = "orange";
+
 /** Hues the coin cycles through as you eat. */
 export const COIN_HUES = [
   "gold",
@@ -152,9 +159,15 @@ export const paletteVars = Object.fromEntries([
     `--c-${name}-deep`,
     hex,
   ]),
-  ["--c-brand", PALETTE[BRAND]],
   ["--dust", dust()],
-  ["--c-brand-rgb", toRgbTriplet(PALETTE[BRAND])],
+  /* Both states are published; the stylesheet picks between them. They are
+     not emitted as `--c-brand` directly because these land inline on the
+     root, and an inline value cannot be overridden by the class that marks
+     the run as over. */
+  ["--c-brand-rest", PALETTE[BRAND]],
+  ["--c-brand-rest-rgb", toRgbTriplet(PALETTE[BRAND])],
+  ["--c-brand-alert", PALETTE[BRAND_ALERT]],
+  ["--c-brand-alert-rgb", toRgbTriplet(PALETTE[BRAND_ALERT])],
   /* Two tiles whose sizes share no useful factor, so the combined repeat is
      far wider than any screen – with this few stars a single tile would show
      its lattice straight away. */

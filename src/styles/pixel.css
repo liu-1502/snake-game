@@ -668,6 +668,11 @@
    the screen behind them is dark, and on the light theme they would just
    smear the text. */
 .neon-stage {
+  /* The brand, resolved. Everything downstream reads `--c-brand`, so the
+     game-over class below repaints the set, the sign and the end panel in
+     one move. */
+  --c-brand: var(--c-brand-rest);
+  --c-brand-rgb: var(--c-brand-rest-rgb);
   /* Positioned so the corner dressing anchors to it, and isolated so the
      dressing's negative z-index resolves inside this element – without a
      stacking context here it drops into the root one and the stage's own
@@ -729,6 +734,12 @@
 
 .dark .starfield {
   display: block;
+}
+
+/* The run is over: the whole machine goes to the warning colour. */
+.neon-stage--over {
+  --c-brand: var(--c-brand-alert);
+  --c-brand-rgb: var(--c-brand-alert-rgb);
 }
 
 /* A pool of light behind the title rather than a wash over the whole page –
