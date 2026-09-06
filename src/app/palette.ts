@@ -97,6 +97,34 @@ export const starField = (
 };
 
 /**
+ * Speckle for the painted surfaces – the set's shell and the end panel's
+ * title bar. Wear on old plastic, not a texture with a direction.
+ *
+ * Written out for the same reason the starfield is: `Math.random()` would
+ * resettle the dust on every load. Kept dark and low-opacity so it grubbies
+ * the colour rather than patterning it, and the tile is 64 units so the
+ * repeat does not read across a bezel.
+ */
+export const dust = (): string => {
+  /* x, y, size */
+  const specks: [number, number, number][] = [
+    [5, 9, 1], [17, 3, 1], [28, 14, 2], [41, 6, 1], [55, 18, 1],
+    [9, 24, 1], [22, 31, 2], [36, 27, 1], [49, 37, 1], [60, 29, 1],
+    [3, 42, 2], [15, 49, 1], [31, 45, 1], [44, 55, 1], [57, 51, 2],
+    [11, 58, 1], [25, 62, 1], [38, 12, 1], [52, 60, 1], [19, 39, 1],
+    [46, 21, 1], [7, 33, 1], [62, 8, 1], [33, 57, 1],
+  ];
+  const rects = specks
+    .map(([x, y, n]) => `<rect x="${x}" y="${y}" width="${n}" height="${n}"/>`)
+    .join("");
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" ` +
+    `viewBox="0 0 64 64" fill="#000" fill-opacity="0.22" ` +
+    `shape-rendering="crispEdges">${rects}</svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+};
+
+/**
  * The palette as CSS custom properties, for the stylesheet to consume.
  *
  * Applied inline on the app's root element rather than written into the CSS,
@@ -113,6 +141,7 @@ export const paletteVars = Object.fromEntries([
     hex,
   ]),
   ["--c-brand", PALETTE[BRAND]],
+  ["--dust", dust()],
   ["--c-brand-rgb", toRgbTriplet(PALETTE[BRAND])],
   /* Two tiles whose sizes share no useful factor, so the combined repeat is
      far wider than any screen – with this few stars a single tile would show
