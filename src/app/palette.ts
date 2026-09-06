@@ -54,17 +54,6 @@ export const toRgbTriplet = (hex: string): string => {
   return `${(n >> 16) & 255} ${(n >> 8) & 255} ${n & 255}`;
 };
 
-/** Mixes a hex colour toward white. 0 leaves it, 1 is white. */
-export const lighten = (hex: string, amount: number): string => {
-  const h = hex.replace("#", "");
-  const n = parseInt(h, 16);
-  const out = [(n >> 16) & 255, (n >> 8) & 255, n & 255]
-    .map((c) => Math.round(c + (255 - c) * amount))
-    .map((c) => c.toString(16).padStart(2, "0"))
-    .join("");
-  return `#${out}`;
-};
-
 /**
  * A repeating pixel motif for the empty page either side of the set –
  * staggered dashes that read as rows of terminal text at a glance.
@@ -92,6 +81,36 @@ export const dashWeave = (color: string): string => {
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 };
 
+/** Mixes two hex colours. `t` of 0 is `a`, 1 is `b`. */
+export const mix = (a: string, b: string, t: number): string => {
+  const parse = (hex: string) => {
+    const n = parseInt(hex.replace("#", ""), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  };
+  const [x, y] = [parse(a), parse(b)];
+  return `#${x
+    .map((c, i) => Math.round(c * (1 - t) + y[i] * t))
+    .map((c) => c.toString(16).padStart(2, "0"))
+    .join("")}`;
+};
+
+/**
+ * A halftone dot field – a plain square-dot grid that the stylesheet's mask
+ * then fades out, giving the density falloff.
+ *
+ * Drawn as an SVG data URI rather than a CSS radial-gradient because a
+ * gradient dot has a soft edge: at three pixels across it reads as a blur
+ * instead of a pixel. The tile is 8 units with a 2-unit dot, so the dot stays
+ * three-eighths of the spacing whatever `background-size` is set to.
+ */
+export const dotField = (color: string): string => {
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" ` +
+    `viewBox="0 0 8 8" fill="${color}" shape-rendering="crispEdges">` +
+    `<rect x="0" y="0" width="2" height="2"/></svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+};
+
 /**
  * The palette as CSS custom properties, for the stylesheet to consume.
  *
@@ -109,8 +128,8 @@ export const paletteVars = Object.fromEntries([
     hex,
   ]),
   ["--side-weave", dashWeave(PALETTE.blue)],
-  /* The brand blue is 2.6:1 on the near-black page – unreadable as text. A
-     tint of it keeps hue 240 exactly, so it still reads as the brand colour
-     rather than as the cyan it replaced, and clears 5.1:1. */
-  ["--c-blue-tint", lighten(PALETTE.blue, 0.35)],
+  /* Azure, not a tint of the brand blue: tinting #1e1eff holds hue 240 and
+     the eye calls that violet. Carried most of the way to the diamond's cyan
+     it lands on a pale blue that actually reads blue. */
+  ["--bottom-dots", dotField(mix(PALETTE.blue, PALETTE.cyan, 0.72))],
 ]) as Record<string, string>;

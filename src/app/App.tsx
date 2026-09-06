@@ -42,6 +42,7 @@ export default function App() {
       {/* Page dressing. Sits behind the game, which is lifted above it. */}
       <div className="corner-weave corner-weave--left" aria-hidden="true" />
       <div className="corner-weave corner-weave--right" aria-hidden="true" />
+      <div className="bottom-dots" aria-hidden="true" />
 
       <div className="flex flex-col items-center gap-4 sm:gap-12 w-full pt-2 min-[375px]:pt-4 sm:pt-8 pb-2 min-[375px]:pb-4 sm:pb-8">
         {/* Header. On a phone the controls take their own row and the title

@@ -545,8 +545,12 @@
   color: var(--c-blue);
 }
 
+/* Blue enough to read as blue. The brand blue is 2.6:1 on this page and a
+   plain tint of it stays at hue 240, which the eye calls violet; carrying it
+   toward the diamond's cyan lands on hue 217 – azure, unmistakably blue –
+   at 7.1:1. */
 .dark .high-value {
-  color: var(--c-blue-tint);
+  color: color-mix(in srgb, var(--c-blue) 40%, var(--c-cyan));
 }
 
 .level-value {
@@ -626,10 +630,16 @@
    the screen behind them is dark, and on the light theme they would just
    smear the text. */
 .neon-stage {
-  /* Positioned so the corner dressing anchors to it. Deliberately left at
-     z-index auto: giving it one would trap the controls in a stacking
-     context of their own, below the vignette. */
+  /* Positioned so the corner dressing anchors to it, and isolated so the
+     dressing's negative z-index resolves inside this element – without a
+     stacking context here it drops into the root one and the stage's own
+     background paints straight over it.
+
+     `isolation` rather than a z-index: the vignette and the controls both
+     live in here, so their order is settled between themselves and nothing
+     traps the controls below the vignette. */
   position: relative;
+  isolation: isolate;
   /* The tube's hue. Taken from the palette's blue so the sign, the pool of
      light behind it and the board frame all glow the same colour the snake
      is. The multiplier cycle overrides it. */
@@ -654,6 +664,30 @@
     transparent 0 2px,
     rgb(0 0 0 / 0.16) 2px 4px
   );
+}
+
+/* Halftone dots rising off the foot of the page – a separate piece of
+   dressing from the corner weave above, and a different motif: dots, not
+   dashes. Densest along the bottom edge and thinning upward, which the mask
+   does; the tile itself is an even grid. */
+.bottom-dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 55%;
+  background-image: var(--bottom-dots);
+  background-size: 12px 12px;
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: -1;
+  mask-image: linear-gradient(to top, #000 0%, transparent 85%);
+}
+
+.dark .bottom-dots {
+  /* Higher here for the same reason the corners are: the vignette takes the
+     page edges down by three quarters, and the foot is one of them. */
+  opacity: 0.7;
 }
 
 /* Pixel weave in the two upper corners of the page.
