@@ -607,6 +607,16 @@
   z-index: 50;
 }
 
+/* The vignette reaches 75% black at the edges, and the header buttons sit in
+   a corner – it was laying three quarters of a black wash over them while the
+   d-pad, nearer the middle, took under half. Controls belong above a
+   decorative screen effect, so they opt out of it; the board keeps the CRT
+   falloff. */
+.above-crt {
+  position: relative;
+  z-index: 51;
+}
+
 .dark .crt-vignette {
   display: block;
 }

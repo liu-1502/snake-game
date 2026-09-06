@@ -38,7 +38,7 @@ export default function App() {
             middle column it wrapped to five lines. From sm up it is one row
             with the title centred between the two control groups. */}
         <div className="grid grid-cols-2 sm:grid-cols-[1fr_auto_1fr] items-center gap-y-3 gap-x-2 w-full">
-          <div className="col-start-1 row-start-1 justify-self-start">
+          <div className="col-start-1 row-start-1 justify-self-start above-crt">
             <PixelButton
               color="neutral"
               onClick={() => snakeGameRef.current?.quitGame()}
@@ -55,7 +55,7 @@ export default function App() {
             </h1>
           </div>
 
-          <div className="col-start-2 row-start-1 sm:col-start-3 justify-self-end flex gap-2 min-[375px]:gap-2.5">
+          <div className="col-start-2 row-start-1 sm:col-start-3 justify-self-end flex gap-2 min-[375px]:gap-2.5 above-crt">
             <motion.div
               animate={isGameOver ? { scale: [1, 1.12, 1] } : {}}
               transition={

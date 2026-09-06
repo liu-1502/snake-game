@@ -1074,7 +1074,7 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
       </div>
 
       {/* Mobile Controls */}
-      <div className="flex gap-2 min-[375px]:gap-2.5">
+      <div className="flex gap-2 min-[375px]:gap-2.5 above-crt">
         {DPAD.map(({ direction, rotate, label, color }) => (
           <PixelButton
             key={direction}
