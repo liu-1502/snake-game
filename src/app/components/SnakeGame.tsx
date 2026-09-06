@@ -992,18 +992,29 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
       </div>
 
           {!isPlaying && !isGameOver && (
-            /* The snake always starts on the middle cell, so the prompt hangs
-               from the centre line rather than straddling it – offset by a
-               cell and a half, which clears the head with half a cell to
-               spare at any board scale. */
-            <div
-              className="absolute inset-x-0 top-1/2 flex flex-col items-center gap-3 sm:gap-4 pointer-events-none [--play-u:1px] sm:[--play-u:2px]"
-              style={{ marginTop: CELL_SIZE * boardScale * 1.5 }}
-            >
+            /* The two lines straddle the snake, which always starts on the
+               middle cell: a gap of two and a half cells leaves it room, and
+               the half-cell shift centres that gap on the head rather than on
+               its top edge. Measured in cells so it holds at any board
+               scale. */
+            /* The two lines straddle the snake, which always starts on the
+               middle cell. Each is anchored to the centre line on its own
+               rather than centred as one column: the top line wraps to two
+               rows on a phone, and a single centred column shifts the gap
+               downwards by half that extra height, dropping the wrapped word
+               onto the head. Anchoring separately holds three quarters of a
+               cell of clearance either side of the head at any board
+               scale. */
+            <div className="absolute inset-0 pointer-events-none [--play-u:1px] sm:[--play-u:2px]">
               {/* The sprite flows inline with the text rather than sitting in
                   a flex row, so it stays glued to the first word when the
                   prompt wraps onto two lines on a phone. */}
-              <span className="arcade-blink block px-2 text-center text-[16px] sm:text-[24px] [word-spacing:-0.375em] leading-[1.6]">
+              <span
+                className="arcade-blink absolute inset-x-0 px-2 text-center text-[16px] sm:text-[24px] [word-spacing:-0.375em] leading-[1.6]"
+                style={{
+                  bottom: `calc(50% + ${CELL_SIZE * boardScale * 0.75}px)`,
+                }}
+              >
                 <PixelArt
                   sprite={PLAY}
                   unit="var(--play-u)"
@@ -1012,8 +1023,13 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
                 />
                 PRESS ARROW KEY TO START
               </span>
-              <span className="text-[8px] sm:text-[10px] text-muted-foreground [word-spacing:-0.25em]">
-                [ CLICK · OR PRESS SPACE ]
+              <span
+                className="absolute inset-x-0 px-2 text-center text-[8px] sm:text-[10px] text-muted-foreground [word-spacing:-0.25em]"
+                style={{
+                  top: `calc(50% + ${CELL_SIZE * boardScale * 1.75}px)`,
+                }}
+              >
+                [ CLICK · OR PRESS ARROW KEY ]
               </span>
             </div>
           )}

@@ -69,7 +69,7 @@ export default function App() {
               }
             >
               <PixelButton
-                color="white-blue"
+                color="white-green"
                 onClick={() => snakeGameRef.current?.resetGame()}
                 className="w-10 h-10 sm:w-11 sm:h-11"
                 aria-label="Restart game"
@@ -78,7 +78,7 @@ export default function App() {
               </PixelButton>
             </motion.div>
             <PixelButton
-              color="white-purple"
+              color="white-blue"
               onClick={() => {
                 const next = !isMuted;
                 sfx.setMuted(next);
@@ -91,7 +91,7 @@ export default function App() {
               <PixelIcon sprite={isMuted ? "mute" : "sound"} />
             </PixelButton>
             <PixelButton
-              color="white-amber"
+              color="white-gold"
               onClick={() => setIsDark(!isDark)}
               className="w-10 h-10 sm:w-11 sm:h-11"
               aria-label="Toggle theme"
