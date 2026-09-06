@@ -996,9 +996,17 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
                always starts in the middle. Measured in cells so it keeps
                its place if the board size changes. */
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 sm:gap-4 pointer-events-none [--play-u:1px] sm:[--play-u:2px]">
-              <span className="arcade-blink flex items-center gap-3 sm:gap-4 text-[16px] sm:text-[32px] [word-spacing:-0.375em]">
-                <PixelArt sprite={PLAY} unit="var(--play-u)" />
-                PRESS START
+              {/* The sprite flows inline with the text rather than sitting in
+                  a flex row, so it stays glued to the first word when the
+                  prompt wraps onto two lines on a phone. */}
+              <span className="arcade-blink block px-2 text-center text-[16px] sm:text-[24px] [word-spacing:-0.375em] leading-[1.6]">
+                <PixelArt
+                  sprite={PLAY}
+                  unit="var(--play-u)"
+                  className="mr-2 sm:mr-3"
+                  style={{ display: "inline-block", verticalAlign: "middle" }}
+                />
+                PRESS ARROW KEY TO START
               </span>
               <span className="text-[8px] sm:text-[10px] text-muted-foreground [word-spacing:-0.25em]">
                 [ CLICK · OR PRESS SPACE ]
