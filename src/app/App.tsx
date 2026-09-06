@@ -5,7 +5,9 @@ import { PixelButton, PixelIcon } from "./components/PixelButton";
 import { sfx } from "./sfx";
 
 export default function App() {
-  const [isDark, setIsDark] = useState(false);
+  /* The neon/CRT treatment is built for a dark screen, so start there
+     regardless of the system setting. The toggle still works. */
+  const [isDark, setIsDark] = useState(true);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isMuted, setIsMuted] = useState(() => sfx.isMuted());
   const [isBoosted, setIsBoosted] = useState(false);
@@ -18,14 +20,6 @@ export default function App() {
     window.focus();
     if (document.activeElement === document.body) return;
     (document.activeElement as HTMLElement | null)?.blur?.();
-  }, []);
-
-  useEffect(() => {
-    // Check system preference on mount
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-    setIsDark(prefersDark);
   }, []);
 
   useEffect(() => {

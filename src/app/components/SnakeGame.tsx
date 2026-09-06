@@ -1,4 +1,5 @@
 import {
+  useMemo,
   useEffect,
   useState,
   useCallback,
@@ -40,19 +41,24 @@ const DPAD = [
   { direction: "RIGHT", rotate: 90, label: "Move right" },
 ] as const;
 
-const GRID_WIDTH = 34;
-const GRID_HEIGHT = 20;
+/**
+ * Board shape per screen. Cell size is fixed by the sprite grid, so the only
+ * way to keep cells legible on a phone is to use fewer columns – 34 columns
+ * squeezed into 375px leaves 10px cells.
+ */
+const DESKTOP_GRID = { width: 34, height: 20 };
+const PHONE_GRID = { width: 17, height: 20 };
+const PHONE_QUERY = "(max-width: 639px)";
+
+const gridFor = (isPhone: boolean) =>
+  isPhone ? PHONE_GRID : DESKTOP_GRID;
 const CELL_SIZE = 25;
 /** One sprite pixel. Sprites are drawn on a 10-tall grid, so this fills a cell. */
 const SPRITE_UNIT = CELL_SIZE / 10;
-const BOARD_WIDTH = GRID_WIDTH * CELL_SIZE;
-const BOARD_HEIGHT = GRID_HEIGHT * CELL_SIZE;
 /** Frame is two rules with a gap between them; the wrapper reserves all three. */
 const FRAME_LINE = 3;
 const FRAME_GAP = 12;
 const FRAME_BORDER = FRAME_LINE * 2 + FRAME_GAP;
-const FRAME_WIDTH = BOARD_WIDTH + FRAME_BORDER * 2;
-const FRAME_HEIGHT = BOARD_HEIGHT + FRAME_BORDER * 2;
 /**
  * Space the title, score row, d-pad and page padding take around the board –
  * measured, not guessed. Budgeting too little lets the board grow past the
@@ -62,9 +68,6 @@ const CHROME_HEIGHT = 348;
 
 const HIGH_SCORE_KEY = "snake-high-score";
 // Starts as a bare head; every heart eaten adds one segment.
-const INITIAL_SNAKE: Position[] = [
-  { x: Math.floor(GRID_WIDTH / 2), y: Math.floor(GRID_HEIGHT / 2) },
-];
 /** Same blue as the board frame and the d-pad buttons. */
 const INITIAL_SNAKE_COLOR = "#1e1eff";
 const INITIAL_DIRECTION: Direction = "UP";
@@ -133,7 +136,38 @@ export interface SnakeGameRef {
 }
 
 export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverChange, onBoostChange }, ref) => {
-  const [snake, setSnake] = useState<Position[]>(INITIAL_SNAKE);
+  const [grid, setGrid] = useState(() =>
+    gridFor(window.matchMedia(PHONE_QUERY).matches),
+  );
+  /* The game loop lives in a timer, so its closure can outlive a breakpoint
+     change by a tick. Reading the bounds through a ref keeps that stray tick
+     from measuring the new board against the old walls. */
+  const gridRef = useRef(grid);
+  gridRef.current = grid;
+
+  useEffect(() => {
+    const query = window.matchMedia(PHONE_QUERY);
+    const sync = () => setGrid(gridFor(query.matches));
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, []);
+
+  const boardWidth = grid.width * CELL_SIZE;
+  const boardHeight = grid.height * CELL_SIZE;
+  const frameWidth = boardWidth + FRAME_BORDER * 2;
+  const frameHeight = boardHeight + FRAME_BORDER * 2;
+
+  const initialSnake = useMemo<Position[]>(
+    () => [
+      {
+        x: Math.floor(grid.width / 2),
+        y: Math.floor(grid.height / 2),
+      },
+    ],
+    [grid],
+  );
+
+  const [snake, setSnake] = useState<Position[]>(initialSnake);
   const [snakeColors, setSnakeColors] = useState<string[]>([
     INITIAL_SNAKE_COLOR,
   ]);
@@ -215,10 +249,10 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
     const fit = () => {
       const cell = Math.min(
         CELL_SIZE,
-        Math.floor((element.clientWidth * CELL_SIZE) / FRAME_WIDTH),
+        Math.floor((element.clientWidth * CELL_SIZE) / frameWidth),
         Math.floor(
           ((window.innerHeight - CHROME_HEIGHT) * CELL_SIZE) /
-            FRAME_HEIGHT,
+            frameHeight,
         ),
       );
       setBoardScale(Math.max(6, cell) / CELL_SIZE);
@@ -231,7 +265,7 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
       observer.disconnect();
       window.removeEventListener("resize", fit);
     };
-  }, []);
+  }, [frameWidth, frameHeight]);
 
   /** One level per 50 points, i.e. every five coins. Purely a readout of
       how far into the run you are – the speed ramp keys off `score`. */
@@ -253,8 +287,8 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
       let newFood: Position;
       do {
         newFood = {
-          x: Math.floor(Math.random() * GRID_WIDTH),
-          y: Math.floor(Math.random() * GRID_HEIGHT),
+          x: Math.floor(Math.random() * grid.width),
+          y: Math.floor(Math.random() * grid.height),
         };
       } while (
         currentSnake.some(
@@ -267,7 +301,7 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
       );
       return newFood;
     },
-    [],
+    [grid],
   );
 
   const generateBoosterFood = useCallback(
@@ -278,8 +312,8 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
       let newBooster: Position;
       do {
         newBooster = {
-          x: Math.floor(Math.random() * GRID_WIDTH),
-          y: Math.floor(Math.random() * GRID_HEIGHT),
+          x: Math.floor(Math.random() * grid.width),
+          y: Math.floor(Math.random() * grid.height),
         };
       } while (
         currentSnake.some(
@@ -292,18 +326,18 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
       );
       return newBooster;
     },
-    [],
+    [grid],
   );
 
   /** Clears the board back to its opening state. `playing` decides whether
       the run starts straight away or waits on the start prompt. */
   const dealFreshBoard = useCallback(
     (playing: boolean) => {
-      setSnake(INITIAL_SNAKE);
+      setSnake(initialSnake);
       setSnakeColors([INITIAL_SNAKE_COLOR]);
       setDirection(INITIAL_DIRECTION);
       setNextDirection(INITIAL_DIRECTION);
-      setFood(generateFood(INITIAL_SNAKE));
+      setFood(generateFood(initialSnake));
       setCoinColorIndex(INITIAL_COIN_INDEX);
       setScore(0);
       setIsGameOver(false);
@@ -312,8 +346,19 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
       setMultiplier(1);
       setMultiplierEndTime(null);
     },
-    [generateFood],
+    [generateFood, initialSnake],
   );
+
+  /* Crossing the phone breakpoint changes the board dimensions, which can
+     leave the snake or the food outside the new bounds. Deal a fresh board
+     rather than trying to salvage the run. Skipped on first render – the
+     board is already fresh there. */
+  const lastGrid = useRef(grid);
+  useEffect(() => {
+    if (lastGrid.current === grid) return;
+    lastGrid.current = grid;
+    dealFreshBoard(false);
+  }, [grid, dealFreshBoard]);
 
   const resetGame = useCallback(
     () => dealFreshBoard(true),
@@ -360,11 +405,12 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
   const checkCollision = useCallback(
     (head: Position, body: Position[]): boolean => {
       // Check wall collision
+      const bounds = gridRef.current;
       if (
         head.x < 0 ||
-        head.x >= GRID_WIDTH ||
+        head.x >= bounds.width ||
         head.y < 0 ||
-        head.y >= GRID_HEIGHT
+        head.y >= bounds.height
       ) {
         return true;
       }
@@ -734,7 +780,7 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
         /* Stats stay centred whether or not the hint is showing – with
            justify-between the hint's presence shunted them left. */
         className="relative flex items-center justify-center w-full px-2 sm:px-0 text-[8px] sm:text-[16px]"
-        style={{ maxWidth: FRAME_WIDTH * boardScale }}
+        style={{ maxWidth: frameWidth * boardScale }}
       >
         <div className="flex items-center gap-2 sm:gap-4">
           <div className="flex items-center gap-1 sm:gap-2">
@@ -793,15 +839,15 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
       <div
         className="relative"
         style={{
-          width: FRAME_WIDTH * boardScale,
-          height: FRAME_HEIGHT * boardScale,
+          width: frameWidth * boardScale,
+          height: frameHeight * boardScale,
         }}
       >
       <div
         style={{
           padding: FRAME_BORDER,
-          width: FRAME_WIDTH,
-          height: FRAME_HEIGHT,
+          width: frameWidth,
+          height: frameHeight,
           transform: `scale(${boardScale})`,
           transformOrigin: "top left",
         }}
@@ -814,8 +860,8 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
           }${isGameOver ? " board-shake" : ""}`}
           style={
             {
-              width: BOARD_WIDTH,
-              height: BOARD_HEIGHT,
+              width: boardWidth,
+              height: boardHeight,
               "--frame-line": `${FRAME_LINE}px`,
               "--frame-gap": `${FRAME_GAP}px`,
               "--frame-color": "#1e1eff",
@@ -828,11 +874,11 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
           <div
             className="absolute inset-0 grid"
             style={{
-              gridTemplateColumns: `repeat(${GRID_WIDTH}, ${CELL_SIZE}px)`,
-              gridTemplateRows: `repeat(${GRID_HEIGHT}, ${CELL_SIZE}px)`,
+              gridTemplateColumns: `repeat(${grid.width}, ${CELL_SIZE}px)`,
+              gridTemplateRows: `repeat(${grid.height}, ${CELL_SIZE}px)`,
             }}
           >
-            {Array.from({ length: GRID_WIDTH * GRID_HEIGHT }).map(
+            {Array.from({ length: grid.width * grid.height }).map(
               (_, i) => (
                 <div
                   key={i}
