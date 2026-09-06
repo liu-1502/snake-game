@@ -787,18 +787,31 @@
    which is what makes it read as light coming off a tube rather than as
    letters with a glow placed behind them.
 
+   The lines are clipped to the lettering rather than laid over the element:
+   across the whole box they cut the glow as well, and the halo picks up a
+   rectangle around the words. That means a second copy of the text – it
+   comes from `data-text` on the heading – painted in the gradient with the
+   glyphs as the clip and no colour of its own, so only the strokes take a
+   line.
+
    Lines are on whole pixels and axis-aligned, so they cut the pixel font
    without softening its edges. */
 .dark .neon-title::after {
-  content: "";
+  content: attr(data-text);
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: repeating-linear-gradient(
+  background-image: repeating-linear-gradient(
     to bottom,
     transparent 0 2px,
     rgb(0 0 0 / 0.32) 2px 4px
   );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* The glow belongs to the heading itself; repeating it here would double
+     it and bleed past the strokes again. */
+  text-shadow: none;
 }
 
 /* A tube never sits perfectly still; the dropouts are stepped, not eased. */

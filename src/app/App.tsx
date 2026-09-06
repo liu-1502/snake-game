@@ -60,7 +60,12 @@ export default function App() {
           </div>
 
           <div className="col-start-1 col-span-2 row-start-2 sm:col-start-2 sm:col-span-1 sm:row-start-1 text-center">
-            <h1 className="neon-title text-[16px] min-[375px]:text-[24px] sm:text-[32px] leading-tight [word-spacing:-0.375em]">
+            {/* `data-text` feeds the scanline overlay in the stylesheet,
+                which paints a clipped copy of the lettering. */}
+            <h1
+              className="neon-title text-[16px] min-[375px]:text-[24px] sm:text-[32px] leading-tight [word-spacing:-0.375em]"
+              data-text="Snake Game"
+            >
               Snake Game
             </h1>
           </div>
