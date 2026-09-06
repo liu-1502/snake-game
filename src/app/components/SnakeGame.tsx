@@ -59,9 +59,13 @@ const CELL_SIZE = 25;
 /** One sprite pixel. Sprites are drawn on a 10-tall grid, so this fills a cell. */
 const SPRITE_UNIT = CELL_SIZE / 10;
 /** Frame is two rules with a gap between them; the wrapper reserves all three. */
-const FRAME_LINE = 3;
-const FRAME_GAP = 12;
-const FRAME_BORDER = FRAME_LINE * 2 + FRAME_GAP;
+/* The set, from the outside in: a dark rim, a band of colour for the
+   moulding, and a dark line where the moulding meets the glass. */
+const FRAME_EDGE = 3;
+const FRAME_BAND = 20;
+const FRAME_INNER = 3;
+const FRAME_BORDER = FRAME_EDGE + FRAME_BAND + FRAME_INNER;
+
 /**
  * Space the title, score row, d-pad and page padding take around the board –
  * measured, not guessed. Budgeting too little lets the board grow past the
@@ -843,29 +847,29 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
         }}
       >
       <div
-        style={{
-          padding: FRAME_BORDER,
-          width: frameWidth,
-          height: frameHeight,
-          transform: `scale(${boardScale})`,
-          transformOrigin: "top left",
-        }}
+        /* The moulding. It carries `--frame-color` and the boost animation
+           because it is what shows them – the screen inside only needs the
+           dark line around its edge. */
+        className={`tv-bezel${
+          multiplier > 1 && !isGameOver ? " tv-bezel--boost" : ""
+        }`}
+        style={
+          {
+            padding: FRAME_BORDER,
+            width: frameWidth,
+            height: frameHeight,
+            transform: `scale(${boardScale})`,
+            transformOrigin: "top left",
+            "--frame-edge": `${FRAME_EDGE}px`,
+            "--frame-inner": `${FRAME_INNER}px`,
+          } as React.CSSProperties
+        }
       >
         <div
           className={`relative bg-card touch-none board-frame${
-            multiplier > 1 && !isGameOver
-              ? " board-frame--boost"
-              : ""
-          }${isGameOver ? " board-shake" : ""}`}
-          style={
-            {
-              width: boardWidth,
-              height: boardHeight,
-              "--frame-line": `${FRAME_LINE}px`,
-              "--frame-gap": `${FRAME_GAP}px`,
-              "--frame-color": PALETTE.blue,
-            } as React.CSSProperties
-          }
+            isGameOver ? " board-shake" : ""
+          }`}
+          style={{ width: boardWidth, height: boardHeight }}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >

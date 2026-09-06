@@ -263,12 +263,50 @@
    padding without taking part in layout. The middle ring has to be an
    opaque colour, not `transparent` – a transparent layer would just let the
    outer ring show through and close the gap. */
+.tv-bezel {
+  /* One step of the corner staircase. Three of them turn each corner, the
+     same silhouette the buttons are cut to, so the set and the controls
+     look made of the same material. A border-radius would anti-alias into
+     mush at this scale. */
+  --tv-step: 10px;
+  --tv-edge: #2d2d2d;
+  /* The moulding at rest. White on the dark theme, as asked; on the light
+     theme white would be the page colour and the whole set would vanish
+     into it, so that one takes a grey plastic instead. The multiplier
+     animation overrides this – keyframes beat a normal declaration. */
+  --frame-color: #d5d5d5;
+  background: var(--frame-color);
+  /* The dark rim is drawn inside the moulding rather than around it: an
+     outset shadow would fall outside the clip and be cut away. */
+  box-shadow: inset 0 0 0 var(--frame-edge) var(--tv-edge);
+  clip-path: polygon(
+    calc(var(--tv-step) * 2) 0,
+    calc(100% - var(--tv-step) * 2) 0,
+    calc(100% - var(--tv-step) * 2) var(--tv-step),
+    calc(100% - var(--tv-step)) var(--tv-step),
+    calc(100% - var(--tv-step)) calc(var(--tv-step) * 2),
+    100% calc(var(--tv-step) * 2),
+    100% calc(100% - var(--tv-step) * 2),
+    calc(100% - var(--tv-step)) calc(100% - var(--tv-step) * 2),
+    calc(100% - var(--tv-step)) calc(100% - var(--tv-step)),
+    calc(100% - var(--tv-step) * 2) calc(100% - var(--tv-step)),
+    calc(100% - var(--tv-step) * 2) 100%,
+    calc(var(--tv-step) * 2) 100%,
+    calc(var(--tv-step) * 2) calc(100% - var(--tv-step)),
+    var(--tv-step) calc(100% - var(--tv-step)),
+    var(--tv-step) calc(100% - var(--tv-step) * 2),
+    0 calc(100% - var(--tv-step) * 2),
+    0 calc(var(--tv-step) * 2),
+    var(--tv-step) calc(var(--tv-step) * 2),
+    var(--tv-step) var(--tv-step),
+    calc(var(--tv-step) * 2) var(--tv-step)
+  );
+}
+
+/* The line where the moulding meets the glass. Outset from the screen, so
+   it sits on top of the band and needs no space of its own. */
 .board-frame {
-  box-shadow:
-    0 0 0 var(--frame-line) var(--frame-color),
-    0 0 0 calc(var(--frame-line) + var(--frame-gap)) var(--background),
-    0 0 0 calc(var(--frame-line) * 2 + var(--frame-gap))
-      var(--frame-color);
+  box-shadow: 0 0 0 var(--frame-inner) var(--tv-edge);
 }
 
 /* Multiplier: step the rules through the palette. `steps` keeps it reading
@@ -295,7 +333,11 @@
   }
 }
 
-.board-frame--boost {
+.dark .tv-bezel {
+  --frame-color: #ffffff;
+}
+
+.tv-bezel--boost {
   animation: board-frame-cycle 2.5s steps(1, end) infinite;
 }
 
