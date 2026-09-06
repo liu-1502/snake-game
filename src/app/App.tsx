@@ -51,7 +51,7 @@ export default function App() {
         <div className="grid grid-cols-2 sm:grid-cols-[1fr_auto_1fr] items-center gap-y-3 gap-x-2 w-full">
           <div className="col-start-1 row-start-1 justify-self-start above-crt">
             <PixelButton
-              color="white-blue"
+              color="neutral"
               onClick={() => snakeGameRef.current?.quitGame()}
               className="w-10 h-10 sm:w-11 sm:h-11"
               aria-label="Quit game"
@@ -89,7 +89,9 @@ export default function App() {
               </PixelButton>
             </motion.div>
             <PixelButton
-              color="white-red"
+              /* Green while sound is on, red once it is off – the colour
+                 carries the state, not just the sprite. */
+              color={isMuted ? "white-red" : "white-green"}
               onClick={() => {
                 const next = !isMuted;
                 sfx.setMuted(next);

@@ -11,6 +11,7 @@ type PixelColor =
   | "neutral"
   | "white-blue"
   | "white-red"
+  | "white-green"
   | "white-orange";
 
 interface PixelButtonProps

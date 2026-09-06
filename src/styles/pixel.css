@@ -148,8 +148,11 @@
 .pixel-btn--green   { --base: var(--c-green); }
 /* Pale body, so the icon has to flip dark or it disappears. */
 .pixel-btn--white  { --base: #ffffff; --shade: #d4d4d4; --light: var(--c-blue); --ink: #2d2d2d; }
-/* Deliberately muted – for actions that shouldn't compete with the game. */
-.pixel-btn--neutral { --base: #7a7a7a; }
+/* Deliberately muted – for actions that shouldn't compete with the game. A
+   light grey shell rather than the white the coloured controls use: white
+   pulls the eye, and quit should be findable, not prominent. The glyph flips
+   dark because the shell is pale. */
+.pixel-btn--neutral { --base: #d4d4d4; --ink: #2d2d2d; }
 
 /* White body, coloured icon and outline, one hue per action – green to
    start over, blue for audio, sun-gold for the theme toggle.
@@ -174,6 +177,11 @@
 .pixel-btn--white-red {
   --base: #ffffff; --shade: #ffffff;
   --light: var(--c-red); --ink: var(--c-red);
+}
+
+.pixel-btn--white-green {
+  --base: #ffffff; --shade: #ffffff;
+  --light: var(--c-green); --ink: var(--c-green);
 }
 
 .pixel-btn--white-orange {
@@ -321,9 +329,20 @@
 /* The inner frame, and the power button moulded into the chin. Both are the
    shell's colour dropped into shadow rather than a colour of their own, so
    they follow the shell – including through the multiplier cycle. */
-.tv-recess,
-.tv-power {
+.tv-recess {
   background: color-mix(in srgb, var(--frame-color) 78%, #000);
+  box-shadow: inset 0 0 0 2px var(--tv-edge);
+}
+
+/* The button sits lighter than the chin, never darker. Mixed toward a light
+   grey rather than toward black: a darker face works on the white shell but
+   collapses the moment the shell takes a colour – on the game-over blue it
+   left a dark button, a dark rim and a dark glyph all at about 1.6:1. Going
+   the other way, the dark rim and glyph read against it whatever the shell
+   is doing, including mid-boost. Mixed toward #d9d9d9 rather than pure white
+   so it stays a visible object on the white shell too. */
+.tv-power {
+  background: color-mix(in srgb, var(--frame-color) 45%, #d9d9d9);
   box-shadow: inset 0 0 0 2px var(--tv-edge);
 }
 
@@ -395,6 +414,14 @@
   justify-content: center;
   padding: 3px 7px;
   color: var(--tv-edge);
+}
+
+/* The set turns brand blue on game over, matching the panel it is framing.
+   Listed for both themes because the dark rule that sets the resting white
+   is two classes deep – a bare `.tv-bezel--over` would lose to it. */
+.tv-bezel--over,
+.dark .tv-bezel--over {
+  --frame-color: var(--c-blue);
 }
 
 .tv-bezel--boost {

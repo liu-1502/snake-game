@@ -26,12 +26,14 @@ export type PaletteName = keyof typeof PALETTE;
  *
  * The bright tones sit between 1.4:1 and 1.8:1 on the light theme's white
  * page – illegible. These are the light theme's stand-ins, same hue, dark
- * enough to read: the green clears 5.4:1, and the gold is held at 3.1:1,
- * deliberately short of the 4.5:1 text bar because anything darker turns
- * brown rather than gold.
+ * enough to read: the green clears 5.4:1, and the gold is held at 2.9:1,
+ * deliberately short of the 4.5:1 text bar. Its hue matters as much as its
+ * depth – around 44 degrees it reads as gold, and by 36 it has turned to
+ * burnt brown, so it is pinned by hue first and darkened only as far as
+ * that allows.
  */
 export const PALETTE_DEEP = {
-  gold: "#d17f00",
+  gold: "#c18f0a",
   green: "#1a7a3c",
 } as const;
 

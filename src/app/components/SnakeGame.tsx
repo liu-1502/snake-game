@@ -859,7 +859,7 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
            dark line around its edge. */
         className={`tv-bezel${
           multiplier > 1 && !isGameOver ? " tv-bezel--boost" : ""
-        }`}
+        }${isGameOver ? " tv-bezel--over" : ""}`}
         style={
           {
             width: frameWidth,
