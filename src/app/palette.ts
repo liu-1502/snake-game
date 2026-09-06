@@ -22,15 +22,16 @@ export const PALETTE = {
 export type PaletteName = keyof typeof PALETTE;
 
 /**
- * Darker cuts of the three hues that also appear as text.
+ * Darker cuts of the hues that also appear as text.
  *
  * The bright tones sit between 1.4:1 and 1.8:1 on the light theme's white
- * page – illegible. These clear 4.5:1, so the light theme swaps to them and
- * keeps the same hue.
+ * page – illegible. These are the light theme's stand-ins, same hue, dark
+ * enough to read: the green clears 5.4:1, and the gold is held at 3.1:1,
+ * deliberately short of the 4.5:1 text bar because anything darker turns
+ * brown rather than gold.
  */
 export const PALETTE_DEEP = {
-  gold: "#b06a10",
-  cyan: "#0e6d85",
+  gold: "#d17f00",
   green: "#1a7a3c",
 } as const;
 

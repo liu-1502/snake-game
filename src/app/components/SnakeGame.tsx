@@ -785,7 +785,7 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
   /* One 16px gap for the whole column, so the score row sits the same
      distance above the board as the d-pad sits below it. */
   return (
-    <div className="flex flex-col items-center gap-4 w-full">
+    <div className="flex flex-col items-center gap-6 w-full">
       <div
         /* Stats stay centred whether or not the hint is showing – with
            justify-between the hint's presence shunted them left. */
