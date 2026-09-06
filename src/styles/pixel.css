@@ -164,12 +164,32 @@
   --light: #ffd983; --ink: #e07b00; --outline: #e07b00;
 }
 
-/* The outline faces the page, not the button's white body, so on the dark
-   theme it can take the bright arcade tone the deeper ink can't – gold reads
-   as gold instead of brown. The ink stays put: it still sits on white. */
-.dark .pixel-btn--white-green  { --outline: #22c94e; }
-.dark .pixel-btn--white-blue   { --outline: #4d8bff; }
-.dark .pixel-btn--white-gold   { --outline: #ffb300; }
+/* On the dark theme both the icon and the outline take the neon tone of the
+   matching stat – green for Level, cyan for High, gold for Score – so the
+   header echoes the readouts above the board.
+
+   Chosen for looks over measured contrast: on the white face these run
+   1.4–1.7:1, well under the 3:1 AA floor for graphics. They are 11–15:1
+   against the dark page, so the outline carries the button's shape and the
+   icon reads as a tint inside it.
+
+   The light theme keeps the deeper tones – ink and outline still matching
+   each other – because up there the outline is drawn against a white page
+   and the bright tones vanish into it entirely. */
+.dark .pixel-btn--white-green {
+  --ink: #4ade80;
+  --outline: #4ade80;
+}
+
+.dark .pixel-btn--white-blue {
+  --ink: #7fe9ff;
+  --outline: #7fe9ff;
+}
+
+.dark .pixel-btn--white-gold {
+  --ink: #ffd83d;
+  --outline: #ffd83d;
+}
 
 /* A pure black drop shadow vanishes on the dark board, so tint it with the
    button's own hue instead – the depth still reads. */
