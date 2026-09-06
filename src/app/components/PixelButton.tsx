@@ -10,6 +10,7 @@ type PixelColor =
   | "brand"
   | "white"
   | "neutral"
+  | "ink-plain"
   | "ink-blue"
   | "ink-red"
   | "ink-green"
@@ -101,16 +102,19 @@ const SPRITES = {
   ],
   // A 7x7 cross inset in the 9x9 grid – the other icons read lighter because
   // they're rings, so a full-bleed X looks oversized next to them.
+  /* A single-pixel stroke, corner to corner. The tips are square because a
+     one-pixel end has no shoulder to round off, and the arms carry far less
+     weight than the two- and three-pixel version they replace. */
   close: [
-    ".........",
-    ".XX...XX.",
-    ".XXX.XXX.",
-    "..XXXXX..",
-    "...XXX...",
-    "..XXXXX..",
-    ".XXX.XXX.",
-    ".XX...XX.",
-    ".........",
+    "X.......X",
+    ".X.....X.",
+    "..X...X..",
+    "...X.X...",
+    "....X....",
+    "...X.X...",
+    "..X...X..",
+    ".X.....X.",
+    "X.......X",
   ],
   sound: [
     "...XX....",
@@ -144,6 +148,19 @@ const SPRITES = {
     ".X.....X.",
     "..X...X..",
     "...XXX...",
+  ],
+  /* The heavier X, for the end panel's title bar. The thin one disappears
+     against the bar's colour at that size. */
+  "close-bold": [
+    "XX.....XX",
+    "XXX...XXX",
+    ".XXX.XXX.",
+    "..XXXXX..",
+    "...XXX...",
+    "..XXXXX..",
+    ".XXX.XXX.",
+    "XXX...XXX",
+    "XX.....XX",
   ],
   moon: [
     "..XXX....",

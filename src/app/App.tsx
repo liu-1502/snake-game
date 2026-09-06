@@ -55,7 +55,7 @@ export default function App() {
         <div className="grid grid-cols-2 sm:grid-cols-[1fr_auto_1fr] items-center gap-y-3 gap-x-2 w-full">
           <div className="col-start-1 row-start-1 justify-self-start above-crt">
             <PixelButton
-              color="neutral"
+              color="ink-plain"
               onClick={() => snakeGameRef.current?.quitGame()}
               className="w-9 h-9 pixel-btn--compact"
               aria-label="Quit game"

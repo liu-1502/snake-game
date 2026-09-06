@@ -80,6 +80,13 @@ const FRAME_CHIN = 26;
  */
 const CHROME_HEIGHT = 348;
 
+/* The d-pad bar pinned to the foot of a phone screen: 12px of padding, a
+   48px key, 12px again. Kept here because the board's fit has to reserve it. */
+const DPAD_BAR = 72;
+
+/** Breathing room between the board and that bar. */
+const BOARD_GAP = 12;
+
 const HIGH_SCORE_KEY = "snake-high-score";
 // Starts as a bare head; every heart eaten adds one segment.
 /** Same blue as the board frame and the d-pad buttons. */
@@ -257,13 +264,29 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
     if (!element) return;
 
     const fit = () => {
+      /* On a phone the d-pad is pinned to the foot of the screen, so the
+         height left for the board is whatever sits between the top of this
+         box and that bar. Measured rather than taken from CHROME_HEIGHT:
+         the chrome above varies with the device's width – the title wraps,
+         the stats row does not – and a constant was leaving the d-pad a few
+         pixels off-screen on some sizes. The page is top-aligned there, so
+         this box's top does not move when the board resizes and there is no
+         feedback loop.
+
+         On wider screens the layout is centred, which does move this box
+         when the board changes size, so that path keeps the constant. */
+      const onPhone = window.matchMedia(PHONE_QUERY).matches;
+      const available = onPhone
+        ? window.innerHeight -
+          element.getBoundingClientRect().top -
+          DPAD_BAR -
+          BOARD_GAP
+        : window.innerHeight - CHROME_HEIGHT;
+
       const cell = Math.min(
         CELL_SIZE,
         Math.floor((element.clientWidth * CELL_SIZE) / frameWidth),
-        Math.floor(
-          ((window.innerHeight - CHROME_HEIGHT) * CELL_SIZE) /
-            frameHeight,
-        ),
+        Math.floor((available * CELL_SIZE) / frameHeight),
       );
       setBoardScale(Math.max(6, cell) / CELL_SIZE);
     };
@@ -271,7 +294,17 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
     const observer = new ResizeObserver(fit);
     observer.observe(element);
     window.addEventListener("resize", fit);
+
+    /* One more pass after the first paint. The observer's initial callback
+       can land before the header above has settled, and the phone branch
+       measures this box's top – read too early it comes out short, the board
+       is sized for more room than it has, and nothing fires again to correct
+       it. Observed: the board overlapping the pinned d-pad by 178px on a
+       639px-tall screen, which a stray resize event then fixed. */
+    const settle = requestAnimationFrame(fit);
+
     return () => {
+      cancelAnimationFrame(settle);
       observer.disconnect();
       window.removeEventListener("resize", fit);
     };
@@ -1068,7 +1101,7 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
                     onClick={quitGame}
                     aria-label="Close"
                   >
-                    <PixelIcon sprite="close" />
+                    <PixelIcon sprite="close-bold" />
                   </button>
                 </div>
                 <p className="text-[16px] sm:text-[32px] leading-none [word-spacing:-0.375em]">
@@ -1115,7 +1148,7 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
       </div>
 
       {/* Mobile Controls */}
-      <div className="flex gap-3 min-[375px]:gap-4 above-crt">
+      <div className="dpad flex gap-3 min-[375px]:gap-4 above-crt">
         {DPAD.map(({ direction, rotate, label, color }) => (
           <PixelButton
             key={direction}

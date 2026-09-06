@@ -17,8 +17,7 @@ function readStoredMute(): boolean {
   }
 }
 
-function audio(): AudioContext | null {
-  if (muted) return null;
+function ensureContext(): AudioContext | null {
   if (!context) {
     const Ctor =
       window.AudioContext ??
@@ -30,6 +29,49 @@ function audio(): AudioContext | null {
   // A context built before the first user gesture starts suspended.
   if (context.state === "suspended") void context.resume();
   return context;
+}
+
+function audio(): AudioContext | null {
+  if (muted) return null;
+  return ensureContext();
+}
+
+/**
+ * Mobile browsers start every AudioContext suspended and only honour
+ * `resume()` from inside a real gesture. Every sound this game makes is
+ * triggered from the game loop – a timer, not a gesture – so the resume above
+ * always ran too late and the context stayed suspended: silence, on phones
+ * only, with nothing in the console to show for it.
+ *
+ * Unlocking on the first touch or key press gets the context running while a
+ * gesture is still on the stack. Starting a silent one-frame buffer as well as
+ * calling resume: some versions will not leave 'suspended' until a node has
+ * actually been played inside the gesture.
+ */
+const UNLOCK_EVENTS = ["pointerdown", "touchend", "keydown"] as const;
+
+function unlock() {
+  const ctx = ensureContext();
+  if (!ctx) return detach();
+
+  const source = ctx.createBufferSource();
+  source.buffer = ctx.createBuffer(1, 1, 22050);
+  source.connect(ctx.destination);
+  source.start(0);
+
+  // Only stop listening once it has actually started; resume() resolves
+  // asynchronously and can still be refused.
+  if (ctx.state === "running") detach();
+}
+
+function detach() {
+  for (const type of UNLOCK_EVENTS) {
+    window.removeEventListener(type, unlock);
+  }
+}
+
+for (const type of UNLOCK_EVENTS) {
+  window.addEventListener(type, unlock);
 }
 
 interface Tone {

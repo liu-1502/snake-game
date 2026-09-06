@@ -109,7 +109,10 @@
    here rather than as an inline utility because it has to beat `.pixel-btn`'s
    own --u, and at equal specificity that comes down to source order. */
 .pixel-btn--compact {
-  --u: 2px;
+  /* 20px across the nine-cell sprite. Off the whole-pixel grid – 2px gives
+     18 and 3px gives 27, with nothing crisp in between – so the glyph edges
+     land on half pixels here. */
+  --u: 2.2222px;
 }
 
 .pixel-btn {
@@ -158,6 +161,7 @@
    to hold against the page itself. Blue is 2.6:1 on the dark page, which is
    why the dark theme lifts it toward the diamond's cyan; the rest clear it
    as they are. */
+.pixel-btn--ink-plain .pixel-btn__face,
 .pixel-btn--ink-blue .pixel-btn__face,
 .pixel-btn--ink-red .pixel-btn__face,
 .pixel-btn--ink-green .pixel-btn__face,
@@ -173,6 +177,18 @@
 .dark .pixel-btn--ink-blue {
   --ink: color-mix(in srgb, var(--c-blue) 40%, var(--c-cyan));
   --light: color-mix(in srgb, var(--c-blue) 40%, var(--c-cyan));
+}
+
+/* Quit sits apart from the coloured three: the same bare treatment, but in
+   the page's own foreground, so it reads as available without joining them. */
+.pixel-btn--ink-plain {
+  --ink: #2d2d2d;
+  --light: #2d2d2d;
+}
+
+.dark .pixel-btn--ink-plain {
+  --ink: #c8c8c8;
+  --light: #c8c8c8;
 }
 
 .pixel-btn--ink-red    { --ink: var(--c-red); --light: var(--c-red); }
@@ -952,6 +968,32 @@
   position: relative;
   z-index: 51;
 }
+
+/* On a phone the d-pad is pinned to the foot of the screen rather than sitting
+   at the end of the page. It is the one control you need while playing, and in
+   flow it fell off the bottom on shorter viewports – measured, seven pixels
+   past the fold on a 400x801 screen.
+
+   Its own black ground, so the board can run right up behind it without the
+   keys sitting on the playfield. Phones only: from sm the page is short
+   enough that the bar would just float over empty space.
+
+   Placed after `.above-crt`, which sets `position: relative` on this same
+   element – at equal specificity the later rule is the one that lands. */
+@media (max-width: 639px) {
+  .dpad {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    justify-content: center;
+    padding: 12px 16px;
+    background: #000;
+    /* Same layer as the other controls, above the CRT vignette. */
+    z-index: 51;
+  }
+}
+
 
 .dark .crt-vignette {
   display: block;
