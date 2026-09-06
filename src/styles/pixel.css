@@ -7,6 +7,9 @@
 
 .pixel-btn {
   --u: 3px;
+  /* The outline's thickness, separate from --u. They were the same value,
+     so thinning the edge also shrank the glyph and the bevel with it. */
+  --edge: 2px;
   --outline: #2d2d2d;
   /* icon colour – dark-bodied buttons keep white, pale ones override it */
   --ink: #fff;
@@ -45,7 +48,7 @@
 
 .pixel-btn__body {
   position: absolute;
-  inset: var(--u);
+  inset: var(--edge);
   background: var(--base);
   /* The bevel: one band of light along the top and left, one of shade along
      the bottom and right. Hard-edged insets rather than a gradient, so it

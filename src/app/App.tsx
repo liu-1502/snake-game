@@ -39,12 +39,15 @@ export default function App() {
       style={paletteVars as CSSProperties}
       className={`neon-stage${isBoosted ? " neon-stage--boost" : ""}${
         isGameOver ? " neon-stage--over" : ""
-      } size-full min-h-screen flex flex-col items-center justify-center p-2 min-[375px]:p-4 sm:p-8 bg-background text-foreground`}
+      } size-full min-h-screen flex flex-col items-center justify-start sm:justify-center p-2 min-[375px]:p-4 sm:p-8 pt-6 min-[375px]:pt-6 sm:pt-8 bg-background text-foreground`}
     >
       {/* Page dressing. Sits behind the game on its own layer. */}
       <div className="starfield" aria-hidden="true" />
 
-      <div className="flex flex-col items-center gap-4 sm:gap-12 w-full pt-2 min-[375px]:pt-4 sm:pt-8 pb-2 min-[375px]:pb-4 sm:pb-8">
+      {/* Top-aligned on a phone: centring left a tall empty band above the
+          header, because the board is far shorter than the viewport there.
+          The stage owns the 24px of top padding, so this adds none. */}
+      <div className="flex flex-col items-center gap-4 sm:gap-12 w-full pt-0 sm:pt-8 pb-2 min-[375px]:pb-4 sm:pb-8">
         {/* Header. On a phone the controls take their own row and the title
             drops below them with the full width to itself – squeezed into a
             middle column it wrapped to five lines. From sm up it is one row

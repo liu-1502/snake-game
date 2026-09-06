@@ -1017,7 +1017,7 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
                onto the head. Anchoring separately holds three quarters of a
                cell of clearance either side of the head at any board
                scale. */
-            <div className="absolute inset-0 pointer-events-none [--play-u:1px] sm:[--play-u:2px]">
+            <div className="absolute inset-0 pointer-events-none [--play-u:1px] sm:[--play-u:2px] [--play-lift:0.37em] sm:[--play-lift:0.29em]">
               {/* The sprite flows inline with the text rather than sitting in
                   a flex row, so it stays glued to the first word when the
                   prompt wraps onto two lines on a phone. */}
@@ -1031,7 +1031,16 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
                   sprite={PLAY}
                   unit="var(--play-u)"
                   className="mr-2 sm:mr-3"
-                  style={{ display: "inline-block", verticalAlign: "middle" }}
+                  /* Lifted to the lettering's optical centre, not the line
+                     box's. Measured: this font's caps run from 1.04em above
+                     the baseline to 0.17em above it, so the ink centres well
+                     over half an em up, where `vertical-align: middle` only
+                     reaches a quarter. Two values because the sprite is sized
+                     in whole pixels and so does not scale with the type. */
+                  style={{
+                    display: "inline-block",
+                    verticalAlign: "var(--play-lift)",
+                  }}
                 />
                 PRESS ARROW KEY TO START
               </span>
