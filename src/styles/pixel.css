@@ -665,10 +665,13 @@
     transparent 0 2px,
     rgb(var(--neon) / 0.007) 2px 4px
   );
+  /* One pixel of line every four, rather than two in four – the panel is a
+     small surface and a half-covered one reads as a tint over the colour
+     rather than as lines across it. */
   --scanlines-on-bright: repeating-linear-gradient(
     to bottom,
-    transparent 0 2px,
-    rgb(0 0 0 / 0.08) 2px 4px
+    transparent 0 3px,
+    rgb(0 0 0 / 0.1) 3px 4px
   );
 }
 
@@ -756,7 +759,8 @@
   background-image: var(--scanlines-on-field);
 }
 
-/* Dark lines here – the panel is bright blue, so light ones would vanish. */
+/* Dark lines here – the panel carries the brand colour, so light ones would
+   vanish into it. */
 .dark .game-over-panel {
   background-image: var(--scanlines-on-bright);
 }
