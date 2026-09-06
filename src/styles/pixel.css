@@ -438,11 +438,12 @@
    and a solid offset shadow – the same construction as the buttons, scaled
    up. Lives inside the board so it scales with it. */
 .game-over-panel {
-  /* Darkened from the brand rather than set to it: the type on this panel is
-     white, and the brand at full strength puts it near 2:1. Held as light as
-     that type allows – 4.3:1 – rather than as dark as it could be. */
-  background: color-mix(in srgb, var(--c-brand) 70%, #000);
-  color: #fff;
+  /* The brand at full strength, matching the set around it. That forces the
+     type dark – white on this green is 2.2:1 – which is how a real arcade
+     panel handles a bright plate anyway. The ink is the same green taken
+     almost to black, so the panel reads as one colour in two values. */
+  background: var(--c-brand);
+  color: color-mix(in srgb, var(--c-brand) 22%, #000);
   padding: 14px 20px 16px;
   text-align: center;
   /* No outline: a #2d2d2d rule against the near-black board reads as a
@@ -607,29 +608,6 @@
   animation: score-gain 0.7s steps(7, end) forwards;
 }
 
-/* ---- multiplier badge --------------------------------------------------
-   Flat block in the diamond's own colour rather than a gradient pill – it
-   comes from the diamond, and a rounded gradient was the one non-pixel
-   element left on screen. Inverting the colours is a sturdier arcade blink
-   than fading opacity, and steps() keeps it snapping. */
-@keyframes multiplier-blink {
-  0%,
-  50% {
-    background: var(--c-cyan);
-    color: #2d2d2d;
-  }
-  51%,
-  100% {
-    background: #2d2d2d;
-    color: var(--c-cyan);
-  }
-}
-
-.multiplier-badge {
-  padding: 2px 4px;
-  animation: multiplier-blink 0.6s steps(1, end) infinite;
-}
-
 /* ---- neon / CRT dressing ----------------------------------------------
    Phosphor-tube treatment for the whole game screen. Scoped to the dark
    theme: a glow and a vignette only read as light coming off a tube when
@@ -664,14 +642,6 @@
     to bottom,
     transparent 0 2px,
     rgb(var(--neon) / 0.007) 2px 4px
-  );
-  /* One pixel of line every four, rather than two in four – the panel is a
-     small surface and a half-covered one reads as a tint over the colour
-     rather than as lines across it. */
-  --scanlines-on-bright: repeating-linear-gradient(
-    to bottom,
-    transparent 0 3px,
-    rgb(0 0 0 / 0.1) 3px 4px
   );
 }
 
@@ -720,7 +690,7 @@
     var(--scanlines-on-dark),
     radial-gradient(
       ellipse 55% 26% at 50% 9%,
-      rgb(var(--neon) / 0.1) 0%,
+      rgb(var(--neon) / 0.07) 0%,
       transparent 72%
     );
 }
@@ -759,12 +729,6 @@
   background-image: var(--scanlines-on-field);
 }
 
-/* Dark lines here – the panel carries the brand colour, so light ones would
-   vanish into it. */
-.dark .game-over-panel {
-  background-image: var(--scanlines-on-bright);
-}
-
 /* Glows in whatever colour the text already is, so the gold score, the grey
    labels and the white numbers each keep their own hue. */
 .dark .neon-glow {
@@ -774,11 +738,18 @@
 }
 
 .dark .neon-title {
-  color: #cbe8ff;
+  /* Phosphor green: the brand lifted toward white, so the lettering is the
+     colour of the light coming off it rather than a white sign with a green
+     lamp behind it. Derived, so it follows a brand swap. */
+  color: color-mix(in srgb, var(--c-brand) 55%, #fff);
+  /* Three passes: a tight one to bed the strokes into the glow, a mid one
+     for the halo, a wide faint one for the spill. All held back from full
+     strength – at full opacity the halo swallows the counters in the
+     letterforms and the sign stops reading as pixel type. */
   text-shadow:
-    0 0 4px rgb(var(--neon)),
-    0 0 14px rgb(var(--neon)),
-    0 0 30px rgb(var(--neon) / 0.65);
+    0 0 3px rgb(var(--neon) / 0.75),
+    0 0 9px rgb(var(--neon) / 0.45),
+    0 0 20px rgb(var(--neon) / 0.25);
   animation: neon-flicker 5s steps(1, end) infinite;
   /* Hugs the lettering so the scanlines below cover the sign and not the
      full width of the header. */
@@ -805,10 +776,13 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
+  /* One pixel of line every four. At two in four the lettering is half
+     covered and the strokes start to break up rather than just carry a
+     line across them. */
   background-image: repeating-linear-gradient(
     to bottom,
-    transparent 0 2px,
-    rgb(0 0 0 / 0.32) 2px 4px
+    transparent 0 3px,
+    rgb(0 0 0 / 0.32) 3px 4px
   );
   -webkit-background-clip: text;
   background-clip: text;
