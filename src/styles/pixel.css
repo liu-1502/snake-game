@@ -144,6 +144,7 @@
 .pixel-btn--blue    { --base: var(--c-blue); }
 .pixel-btn--red     { --base: var(--c-red); }
 .pixel-btn--purple  { --base: var(--c-purple); }
+.pixel-btn--pink    { --base: var(--c-pink); }
 .pixel-btn--orange  { --base: var(--c-orange); }
 .pixel-btn--green   { --base: var(--c-green); }
 .pixel-btn--brand   { --base: var(--c-brand); }
@@ -268,10 +269,13 @@
      light theme's page colour and the set vanished into it. The multiplier
      animation overrides this: keyframes beat a normal declaration. */
   --frame-color: var(--c-brand);
-  /* Colour and speckle as separate layers, so the dust settles over the
-     shell whatever colour it is wearing – rest, game over or mid-boost. */
+  /* Colour and wear as separate layers, so the dust settles over the shell
+     whatever colour it is wearing – rest, game over or mid-boost. Laid once
+     at the top-left corner rather than tiled: age gathers somewhere. */
   background-color: var(--frame-color);
   background-image: var(--dust);
+  background-repeat: no-repeat;
+  background-position: top left;
   /* The dark rim is drawn inside the moulding rather than around it: an
      outset shadow would fall outside the clip and be cut away. */
   box-shadow: inset 0 0 0 var(--frame-edge) var(--tv-edge);
@@ -470,9 +474,9 @@
   background-image:
     repeating-linear-gradient(to right, #000 0 6px, transparent 6px 10px),
     var(--dust);
-  background-size: 26px 6px, 64px 64px;
+  background-size: 26px 6px, auto;
   background-position: right 5px center, top left;
-  background-repeat: no-repeat, repeat;
+  background-repeat: no-repeat, no-repeat;
 }
 
 /* The rules and the divider: runs of dashes rather than solid lines, drawn

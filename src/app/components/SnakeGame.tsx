@@ -40,7 +40,7 @@ const ARROW_HEADINGS: Record<string, Direction> = {
 const DPAD = [
   { direction: "LEFT", rotate: 270, label: "Move left", color: "red" },
   { direction: "UP", rotate: 0, label: "Move up", color: "blue" },
-  { direction: "DOWN", rotate: 180, label: "Move down", color: "brand" },
+  { direction: "DOWN", rotate: 180, label: "Move down", color: "pink" },
   { direction: "RIGHT", rotate: 90, label: "Move right", color: "orange" },
 ] as const;
 
@@ -1076,7 +1076,7 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
                     </p>
                   </div>
                 </div>
-                <p className="text-[8px] sm:text-[12px] leading-none mt-3 sm:mt-6 [word-spacing:-0.375em]">
+                <p className="text-[10px] sm:text-[16px] leading-none mt-3 sm:mt-6 [word-spacing:-0.375em]">
                   PRESS SPACE TO RESTART
                 </p>
               </div>

@@ -15,6 +15,7 @@ export const PALETTE = {
   gold: "#ffd83d",
   red: "#e02a2a",
   purple: "#a658f9",
+  pink: "#f4609c",
   orange: "#ffa500",
   cyan: "#7fe9ff",
 } as const;
@@ -97,29 +98,40 @@ export const starField = (
 };
 
 /**
- * Speckle for the painted surfaces – the set's shell and the end panel's
- * title bar. Wear on old plastic, not a texture with a direction.
+ * Wear for the painted surfaces – the set's shell and the end panel's title
+ * bar. A patch, not a tile: it is laid once at the top-left and not repeated,
+ * because dust that covers a whole panel evenly reads as a texture someone
+ * chose, and dust that gathers in one corner reads as age.
  *
- * Written out for the same reason the starfield is: `Math.random()` would
- * resettle the dust on every load. Kept dark and low-opacity so it grubbies
- * the colour rather than patterning it, and the tile is 64 units so the
- * repeat does not read across a bezel.
+ * Clustered rather than spread. Specks come in clumps of two and three with
+ * clear ground between them, which is how flecking actually falls; an even
+ * scatter at this density looks like noise.
+ *
+ * Written out rather than generated, for the same reason the starfield is:
+ * `Math.random()` would resettle the dust on every load.
  */
 export const dust = (): string => {
-  /* x, y, size */
-  const specks: [number, number, number][] = [
-    [5, 9, 1], [17, 3, 1], [28, 14, 2], [41, 6, 1], [55, 18, 1],
-    [9, 24, 1], [22, 31, 2], [36, 27, 1], [49, 37, 1], [60, 29, 1],
-    [3, 42, 2], [15, 49, 1], [31, 45, 1], [44, 55, 1], [57, 51, 2],
-    [11, 58, 1], [25, 62, 1], [38, 12, 1], [52, 60, 1], [19, 39, 1],
-    [46, 21, 1], [7, 33, 1], [62, 8, 1], [33, 57, 1],
+  /* x, y, w, h – the top band clusters, then a thinning run down the left. */
+  const specks: [number, number, number, number][] = [
+    // corner clump
+    [6, 5, 2, 1], [9, 7, 1, 1], [13, 4, 1, 2], [12, 9, 2, 1],
+    [19, 6, 1, 1], [22, 10, 3, 1], [21, 13, 1, 1],
+    [30, 5, 1, 1], [33, 8, 2, 1], [37, 12, 1, 1], [31, 15, 1, 1],
+    [45, 7, 2, 1], [49, 11, 1, 1], [44, 16, 1, 1],
+    [58, 9, 1, 1], [62, 14, 2, 1],
+    // second, looser band
+    [8, 22, 1, 1], [15, 26, 2, 1], [27, 24, 1, 1], [40, 28, 1, 1],
+    [11, 33, 1, 2], [24, 36, 1, 1],
+    // run down the left, thinning
+    [4, 48, 1, 2], [9, 61, 2, 1], [3, 77, 1, 1], [7, 95, 1, 1],
+    [5, 118, 2, 1], [10, 141, 1, 1], [4, 168, 1, 1],
   ];
   const rects = specks
-    .map(([x, y, n]) => `<rect x="${x}" y="${y}" width="${n}" height="${n}"/>`)
+    .map(([x, y, w, h]) => `<rect x="${x}" y="${y}" width="${w}" height="${h}"/>`)
     .join("");
   const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" ` +
-    `viewBox="0 0 64 64" fill="#000" fill-opacity="0.22" ` +
+    `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="200" ` +
+    `viewBox="0 0 80 200" fill="#000" fill-opacity="0.3" ` +
     `shape-rendering="crispEdges">${rects}</svg>`;
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 };

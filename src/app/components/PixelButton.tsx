@@ -5,6 +5,7 @@ type PixelColor =
   | "blue"
   | "red"
   | "purple"
+  | "pink"
   | "orange"
   | "green"
   | "brand"
