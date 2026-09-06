@@ -33,6 +33,9 @@ function figmaAssetResolver() {
 }
 
 export default defineConfig({
+  // GitHub Pages serves a project repo from /<repo>/, so assets have to be
+  // requested from there rather than from the domain root.
+  base: process.env.GITHUB_ACTIONS ? "/snake-game/" : "/",
   plugins: [
     versionedImportResolver(),
     figmaAssetResolver(),
