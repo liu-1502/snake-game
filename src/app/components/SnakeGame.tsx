@@ -33,12 +33,14 @@ const ARROW_HEADINGS: Record<string, Direction> = {
   ArrowRight: "RIGHT",
 };
 
-/** One pixel arrow sprite, rotated per direction. */
+/** One pixel arrow sprite, rotated per direction. Each key gets its own
+    colourway from the button sheet so the pad reads as four distinct keys
+    rather than one repeated button. */
 const DPAD = [
-  { direction: "LEFT", rotate: 270, label: "Move left" },
-  { direction: "UP", rotate: 0, label: "Move up" },
-  { direction: "DOWN", rotate: 180, label: "Move down" },
-  { direction: "RIGHT", rotate: 90, label: "Move right" },
+  { direction: "LEFT", rotate: 270, label: "Move left", color: "pink" },
+  { direction: "UP", rotate: 0, label: "Move up", color: "blue" },
+  { direction: "DOWN", rotate: 180, label: "Move down", color: "purple" },
+  { direction: "RIGHT", rotate: 90, label: "Move right", color: "peach" },
 ] as const;
 
 /**
@@ -1045,10 +1047,10 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
 
       {/* Mobile Controls */}
       <div className="flex gap-2 min-[375px]:gap-2.5">
-        {DPAD.map(({ direction, rotate, label }) => (
+        {DPAD.map(({ direction, rotate, label, color }) => (
           <PixelButton
             key={direction}
-            color="blue"
+            color={color}
             onClick={() => handleDirectionClick(direction)}
             className="w-11 h-11 min-[375px]:w-12 min-[375px]:h-12 sm:w-11 sm:h-11"
             aria-label={label}
