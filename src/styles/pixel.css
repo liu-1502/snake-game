@@ -434,27 +434,60 @@
 }
 
 /* ---- game over panel ---------------------------------------------------
-   Arcade end screen: flat colour block, hard dark outline, white inner rule
-   and a solid offset shadow – the same construction as the buttons, scaled
-   up. Lives inside the board so it scales with it. */
+   A terminal window: green frame and title bar, black interior, green type.
+   Lives inside the board so it scales with it. */
 .game-over-panel {
-  /* The brand at full strength, matching the set around it. That forces the
-     type dark – white on this green is 2.2:1 – which is how a real arcade
-     panel handles a bright plate anyway. The ink is the same green taken
-     almost to black, so the panel reads as one colour in two values. */
-  background: var(--c-brand);
-  color: color-mix(in srgb, var(--c-brand) 22%, #000);
-  padding: 14px 20px 16px;
+  /* Height of the title bar, and the frame around everything. */
+  --win-bar: 12px;
+  --win-frame: 3px;
+  position: relative;
+  background: #000;
+  color: var(--c-brand);
+  /* Room for the bar on top of the normal padding. */
+  padding: calc(14px + var(--win-bar)) 20px 16px;
   text-align: center;
-  /* No outline: a #2d2d2d rule against the near-black board reads as a
-     washed-out grey rim rather than an edge. The flat block plus its offset
-     shadow is enough separation. */
-  box-shadow: 9px 9px 0 rgb(0 0 0 / 0.45);
+  box-shadow:
+    inset 0 0 0 var(--win-frame) var(--c-brand),
+    9px 9px 0 rgb(0 0 0 / 0.45);
+}
+
+/* The title bar, with the three window boxes at its right end.
+
+   The boxes are a repeating gradient sized to hold exactly three of them and
+   set not to repeat – one background layer rather than three elements, and
+   they stay on whole pixels because every stop is in px. */
+.game-over-panel::before {
+  content: "";
+  position: absolute;
+  top: var(--win-frame);
+  left: var(--win-frame);
+  right: var(--win-frame);
+  height: var(--win-bar);
+  background-color: var(--c-brand);
+  background-image: repeating-linear-gradient(
+    to right,
+    #000 0 6px,
+    transparent 6px 10px
+  );
+  background-size: 26px 6px;
+  background-position: right 5px center;
+  background-repeat: no-repeat;
+}
+
+/* The rules and the divider, drawn from the type's own colour so they hold
+   whatever the brand becomes. */
+.panel-rule {
+  border-color: color-mix(in srgb, var(--c-brand) 40%, transparent);
+}
+
+.panel-divider {
+  background: color-mix(in srgb, var(--c-brand) 40%, transparent);
 }
 
 @media (min-width: 640px) {
   .game-over-panel {
-    padding: 28px 40px 32px;
+    --win-bar: 18px;
+    padding: calc(28px + var(--win-bar)) 40px 32px;
   }
 }
 

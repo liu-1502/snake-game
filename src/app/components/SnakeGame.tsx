@@ -1057,7 +1057,7 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
                     w-44 is 176px – exactly 11 characters at 16px in this
                     monospace face – so both labels fit on one line and the
                     divider sits on the centre line. */}
-                <div className="flex gap-4 sm:gap-8 mt-3 sm:mt-6 py-3 sm:py-5 border-y-2 border-solid border-black/25">
+                <div className="flex gap-4 sm:gap-8 mt-3 sm:mt-6 py-3 sm:py-5 border-y-2 border-solid panel-rule">
                   <div className="w-[88px] sm:w-44 whitespace-nowrap">
                     <p className="text-[8px] sm:text-[16px] leading-none [word-spacing:-0.375em]">
                       FINAL SCORE
@@ -1066,7 +1066,7 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
                       {score}
                     </p>
                   </div>
-                  <div className="w-0.5 bg-black/25" />
+                  <div className="w-0.5 panel-divider" />
                   <div className="w-[88px] sm:w-44 whitespace-nowrap">
                     <p className="text-[8px] sm:text-[16px] leading-none [word-spacing:-0.375em]">
                       HIGH SCORE
