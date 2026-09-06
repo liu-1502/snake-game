@@ -8,7 +8,6 @@
 .pixel-btn {
   --u: 3px;
   --outline: #2d2d2d;
-  --shadow: #050505;
   /* icon colour – dark-bodied buttons keep white, pale ones override it */
   --ink: #fff;
 
@@ -22,39 +21,11 @@
   touch-action: manipulation;
 }
 
-/* Stepped corners – one shape reused by the shadow, the outline and the
-   body, so every layer keeps the same pixel silhouette. */
-.pixel-btn__ring,
-.pixel-btn__shadow,
-.pixel-btn__face,
-.pixel-btn__body {
-  clip-path: polygon(
-    calc(var(--u) * 2) 0,
-    calc(100% - var(--u) * 2) 0,
-    calc(100% - var(--u) * 2) var(--u),
-    calc(100% - var(--u)) var(--u),
-    calc(100% - var(--u)) calc(var(--u) * 2),
-    100% calc(var(--u) * 2),
-    100% calc(100% - var(--u) * 2),
-    calc(100% - var(--u)) calc(100% - var(--u) * 2),
-    calc(100% - var(--u)) calc(100% - var(--u)),
-    calc(100% - var(--u) * 2) calc(100% - var(--u)),
-    calc(100% - var(--u) * 2) 100%,
-    calc(var(--u) * 2) 100%,
-    calc(var(--u) * 2) calc(100% - var(--u)),
-    var(--u) calc(100% - var(--u)),
-    var(--u) calc(100% - var(--u) * 2),
-    0 calc(100% - var(--u) * 2),
-    0 calc(var(--u) * 2),
-    var(--u) calc(var(--u) * 2),
-    var(--u) var(--u),
-    calc(var(--u) * 2) var(--u)
-  );
-}
+/* Square corners. The bevel below is what gives these buttons their shape,
+   and a stepped silhouette fights it – the staircase reads as the edge
+   instead of the highlight doing it. */
 
-/* Focus ring, cut to the same stepped silhouette as the button – a plain
-   `outline` draws a square box around the cut corners and reads as a stray
-   frame. Sits first so it paints behind the shadow and face. */
+/* Focus ring. Sits first so it paints behind the shadow and face. */
 .pixel-btn__ring {
   position: absolute;
   inset: calc(var(--u) * -2);
@@ -66,13 +37,6 @@
   opacity: 1;
 }
 
-.pixel-btn__shadow {
-  position: absolute;
-  inset: 0;
-  background: var(--shadow);
-  transform: translate(var(--u), var(--u));
-}
-
 .pixel-btn__face {
   position: absolute;
   inset: 0;
@@ -82,22 +46,19 @@
 .pixel-btn__body {
   position: absolute;
   inset: var(--u);
-  /* hard stop, no smooth gradient – the lower band is the shaded side */
-  background: linear-gradient(
-    to bottom,
-    var(--base) 0 64%,
-    var(--shade) 64% 100%
-  );
+  background: var(--base);
+  /* The bevel: one band of light along the top and left, one of shade along
+     the bottom and right. Hard-edged insets rather than a gradient, so it
+     lands on whole pixels and reads as a moulded edge instead of a fade. */
+  box-shadow:
+    inset var(--u) var(--u) 0 0 var(--bevel-hi),
+    inset calc(var(--u) * -1) calc(var(--u) * -1) 0 0 var(--bevel-lo);
 }
 
-/* white gloss dash, top-left */
+/* The gloss dash belonged to the old rounded body; the bevel carries the
+   light now. */
 .pixel-btn__gloss {
-  position: absolute;
-  top: var(--u);
-  left: calc(var(--u) * 2);
-  width: calc(var(--u) * 3);
-  height: var(--u);
-  background: #fff;
+  display: none;
 }
 
 .pixel-btn__content {
@@ -109,13 +70,17 @@
   color: var(--ink);
 }
 
-/* press: the button drops into its own shadow */
-.pixel-btn:active .pixel-btn__face,
+/* Press: the bevel inverts, so the face reads as pushed in. The glyph moves
+   with it by a single unit – without that the button changes shading but
+   nothing appears to travel. */
+.pixel-btn:active .pixel-btn__body {
+  box-shadow:
+    inset var(--u) var(--u) 0 0 var(--bevel-lo),
+    inset calc(var(--u) * -1) calc(var(--u) * -1) 0 0 var(--bevel-hi);
+}
+
 .pixel-btn:active .pixel-btn__content {
   transform: translate(var(--u), var(--u));
-}
-.pixel-btn:active .pixel-btn__shadow {
-  opacity: 0;
 }
 
 .pixel-btn:hover .pixel-btn__body {
@@ -139,6 +104,10 @@
 .pixel-btn {
   --shade: color-mix(in srgb, var(--base) 80%, #000);
   --light: color-mix(in srgb, var(--base) 72%, #fff);
+  /* Pitched wide apart – a narrow bevel on a three-pixel band just looks
+     like a mistake in the fill. */
+  --bevel-hi: color-mix(in srgb, var(--base) 45%, #fff);
+  --bevel-lo: color-mix(in srgb, var(--base) 52%, #000);
 }
 
 .pixel-btn--blue    { --base: var(--c-blue); }
@@ -189,12 +158,6 @@
 .pixel-btn--white-orange {
   --base: #ffffff; --shade: #ffffff;
   --light: var(--c-orange); --ink: var(--c-orange);
-}
-
-/* A pure black drop shadow vanishes on the dark board, so tint it with the
-   button's own hue instead – the depth still reads. */
-.dark .pixel-btn {
-  --shadow: color-mix(in srgb, var(--base) 24%, #000);
 }
 
 /* ---- reward sprites ----------------------------------------------------
@@ -445,7 +408,9 @@
    Lives inside the board so it scales with it. */
 .game-over-panel {
   /* Height of the title bar, and the frame around everything. */
-  --win-bar: 12px;
+  /* Deep enough that the close button on it is worth aiming at – 24px on a
+     phone, 28 from sm. A decorative bar would be half this. */
+  --win-bar: 24px;
   --win-frame: 3px;
   /* The window boxes are holes in the bar, so they show the interior. */
   --panel-hole: #fff;
@@ -464,25 +429,66 @@
     9px 9px 0 rgb(0 0 0 / 0.45);
 }
 
-/* The title bar, with the three window boxes at its right end.
-
-   The boxes are a repeating gradient sized to hold exactly three of them and
-   set not to repeat – one background layer rather than three elements, and
-   they stay on whole pixels because every stop is in px. */
-.game-over-panel::before {
-  content: "";
+/* The title bar. Marks at the left, close button at the right. */
+.panel-bar {
   position: absolute;
   top: var(--win-frame);
   left: var(--win-frame);
   right: var(--win-frame);
   height: var(--win-bar);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background-color: var(--c-brand);
-  background-image:
-    repeating-linear-gradient(to right, var(--panel-hole) 0 6px, transparent 6px 10px),
-    var(--dust);
-  background-size: 26px 6px, auto;
-  background-position: right 5px center, top left;
-  background-repeat: no-repeat, no-repeat;
+  background-image: var(--dust);
+  background-repeat: no-repeat;
+  background-position: top left;
+}
+
+/* The three marks. A repeating gradient sized to hold exactly three and set
+   not to repeat – one background layer rather than three elements, and they
+   stay on whole pixels because every stop is in px. They are holes in the
+   bar, so they carry the interior's colour. */
+.panel-bar__marks {
+  width: 26px;
+  height: 6px;
+  margin-left: 5px;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--panel-hole) 0 6px,
+    transparent 6px 10px
+  );
+}
+
+/* Sized to the full height of the bar so there is something to hit; the bar
+   is deeper than a decorative one would be for that reason. */
+.panel-close {
+  --u: 2px;
+  height: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--panel-hole);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.panel-close:hover,
+.panel-close:focus-visible {
+  background: var(--panel-hole);
+  color: var(--c-brand);
+  outline: none;
+}
+
+@media (min-width: 640px) {
+  .panel-close {
+    --u: 3px;
+  }
 }
 
 /* The rules and the divider: runs of dashes rather than solid lines, drawn
@@ -519,7 +525,7 @@
 
 @media (min-width: 640px) {
   .game-over-panel {
-    --win-bar: 18px;
+    --win-bar: 28px;
     padding: calc(28px + var(--win-bar)) 40px 32px;
   }
 }

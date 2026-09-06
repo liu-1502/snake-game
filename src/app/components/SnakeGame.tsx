@@ -1049,6 +1049,19 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
           {isGameOver && (
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="game-over-panel">
+                {/* The window's own bar. A real element rather than a
+                    pseudo, because it carries a control. */}
+                <div className="panel-bar">
+                  <span className="panel-bar__marks" aria-hidden="true" />
+                  <button
+                    type="button"
+                    className="panel-close"
+                    onClick={quitGame}
+                    aria-label="Close"
+                  >
+                    <PixelIcon sprite="close" />
+                  </button>
+                </div>
                 <p className="text-[16px] sm:text-[32px] leading-none [word-spacing:-0.375em]">
                   GAME OVER
                 </p>

@@ -47,7 +47,6 @@ export const PixelButton = forwardRef<
       }}
     >
       <span className="pixel-btn__ring" />
-      <span className="pixel-btn__shadow" />
       <span className="pixel-btn__face">
         <span className="pixel-btn__body">
           <span className="pixel-btn__gloss" />
