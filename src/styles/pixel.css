@@ -159,14 +159,17 @@
    the icon's worst-case background from #d4d4d4 to #ffffff, which is what
    buys the brighter inks below. Depth now comes from the coloured outline
    and the drop shadow instead of the shading band. */
-.pixel-btn--white-green {
-  --base: #ffffff; --shade: #ffffff;
-  --light: var(--c-green); --ink: var(--c-green-deep); --outline: var(--c-green-deep);
-}
-
+/* Blue and red are 7.8:1 and 4.6:1 on the white body, so unlike the orange
+   they need no darker cut for the light theme – one value serves both, and
+   the icon and the outline stay the same colour in either. */
 .pixel-btn--white-blue {
   --base: #ffffff; --shade: #ffffff;
-  --light: var(--c-cyan); --ink: var(--c-cyan-deep); --outline: var(--c-cyan-deep);
+  --light: var(--c-blue); --ink: var(--c-blue); --outline: var(--c-blue);
+}
+
+.pixel-btn--white-red {
+  --base: #ffffff; --shade: #ffffff;
+  --light: var(--c-red); --ink: var(--c-red); --outline: var(--c-red);
 }
 
 .pixel-btn--white-orange {
@@ -186,16 +189,6 @@
    The light theme keeps the deeper tones – ink and outline still matching
    each other – because up there the outline is drawn against a white page
    and the bright tones vanish into it entirely. */
-.dark .pixel-btn--white-green {
-  --ink: var(--c-green);
-  --outline: var(--c-green);
-}
-
-.dark .pixel-btn--white-blue {
-  --ink: var(--c-cyan);
-  --outline: var(--c-cyan);
-}
-
 .dark .pixel-btn--white-orange {
   --ink: var(--c-orange);
   --outline: var(--c-orange);
