@@ -1,3 +1,4 @@
+import { PALETTE } from "../palette";
 export interface Sprite {
   /** One character per pixel; a character with no palette entry is transparent. */
   rows: string[];
@@ -109,12 +110,15 @@ export const COIN: Sprite = {
   palette: {
     K: OUTLINE,
     W: "#ffffff",
+    /* The three tones are mixed from the one hue at the same ratios
+       `coinPalette` below uses, so the sprite as authored and the sprite as
+       re-tinted at runtime are shaded identically. */
     /** Bright face. */
-    Y: "#ffd83d",
+    Y: PALETTE.gold,
     /** Raised inner plate. */
-    O: "#e8a020",
+    O: `color-mix(in srgb, ${PALETTE.gold} 68%, #000)`,
     /** Shading down the right-hand side. */
-    D: "#b06a10",
+    D: `color-mix(in srgb, ${PALETTE.gold} 45%, #000)`,
   },
 };
 
@@ -147,10 +151,10 @@ export const DIAMOND: Sprite = {
   palette: {
     K: OUTLINE,
     W: "#ffffff",
-    C: "#7fe9ff",
+    C: PALETTE.cyan,
     B: "#3bb8e8",
   },
-  glow: "#7fe9ff",
+  glow: PALETTE.cyan,
 };
 
 /** Play triangle for the start prompt. */
@@ -189,8 +193,8 @@ export const SNAKE_HEAD: Sprite = {
     "DDDDDDDDDD",
   ],
   palette: {
-    D: "#1414c8",
-    B: "#1e1eff",
+    D: `color-mix(in srgb, ${PALETTE.blue} 80%, #000)`,
+    B: PALETTE.blue,
     W: "#ffffff",
     K: "#1a1a1a",
   },
@@ -211,7 +215,7 @@ export const SNAKE_TAIL: Sprite = {
     "..........",
   ],
   palette: {
-    D: "#1414c8",
-    B: "#1e1eff",
+    D: `color-mix(in srgb, ${PALETTE.blue} 80%, #000)`,
+    B: PALETTE.blue,
   },
 };

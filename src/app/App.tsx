@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
+import type { CSSProperties } from "react";
 import { SnakeGame } from "./components/SnakeGame";
 import { motion } from "motion/react";
 import { PixelButton, PixelIcon } from "./components/PixelButton";
 import { sfx } from "./sfx";
+import { paletteVars } from "./palette";
 
 export default function App() {
   /* The neon/CRT treatment is built for a dark screen, so start there
@@ -31,7 +33,12 @@ export default function App() {
   }, [isDark]);
 
   return (
-    <div className={`neon-stage${isBoosted ? " neon-stage--boost" : ""} size-full min-h-screen flex flex-col items-center justify-center p-2 min-[375px]:p-4 sm:p-8 bg-background text-foreground`}>
+    <div
+      /* The palette rides on the root as custom properties so the stylesheet
+         and the components share one definition – see src/app/palette.ts. */
+      style={paletteVars as CSSProperties}
+      className={`neon-stage${isBoosted ? " neon-stage--boost" : ""} size-full min-h-screen flex flex-col items-center justify-center p-2 min-[375px]:p-4 sm:p-8 bg-background text-foreground`}
+    >
       <div className="flex flex-col items-center gap-4 sm:gap-16 w-full pt-2 min-[375px]:pt-4 sm:pt-8 pb-2 min-[375px]:pb-4 sm:pb-8">
         {/* Header. On a phone the controls take their own row and the title
             drops below them with the full width to itself – squeezed into a

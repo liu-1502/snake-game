@@ -9,6 +9,7 @@ import {
 } from "react";
 import { PixelButton, PixelIcon } from "./PixelButton";
 import { sfx } from "../sfx";
+import { COIN_HUES, PALETTE } from "../palette";
 import {
   PixelArt,
   COIN,
@@ -37,10 +38,10 @@ const ARROW_HEADINGS: Record<string, Direction> = {
     colourway from the button sheet so the pad reads as four distinct keys
     rather than one repeated button. */
 const DPAD = [
-  { direction: "LEFT", rotate: 270, label: "Move left", color: "pink" },
+  { direction: "LEFT", rotate: 270, label: "Move left", color: "red" },
   { direction: "UP", rotate: 0, label: "Move up", color: "blue" },
   { direction: "DOWN", rotate: 180, label: "Move down", color: "purple" },
-  { direction: "RIGHT", rotate: 90, label: "Move right", color: "peach" },
+  { direction: "RIGHT", rotate: 90, label: "Move right", color: "orange" },
 ] as const;
 
 /**
@@ -71,7 +72,7 @@ const CHROME_HEIGHT = 348;
 const HIGH_SCORE_KEY = "snake-high-score";
 // Starts as a bare head; every heart eaten adds one segment.
 /** Same blue as the board frame and the d-pad buttons. */
-const INITIAL_SNAKE_COLOR = "#1e1eff";
+const INITIAL_SNAKE_COLOR = PALETTE.blue;
 const INITIAL_DIRECTION: Direction = "UP";
 const INITIAL_SPEED = 150;
 const MIN_SPEED = 50; // Fastest possible speed
@@ -86,20 +87,16 @@ const POINTS_PER_LEVEL = 50;
  * The coin is re-tinted on every spawn, so the snake still gains a
  * differently coloured segment each time it eats.
  */
-const COIN_COLORS = [
-  { color: "#ffd83d", name: "Gold" },
-  { color: "#22c94e", name: "Green" },
-  { color: "#1e1eff", name: "Blue" },
-  { color: "#e02a2a", name: "Red" },
-  { color: "#ff6b9d", name: "Pink" },
-  { color: "#bb8fce", name: "Purple" },
-  { color: "#ffa500", name: "Orange" },
-];
+const COIN_COLORS = COIN_HUES.map((name) => ({
+  name,
+  color: PALETTE[name],
+}));
 
-/** The coin on screen at the start of every game; later spawns are random. */
-const INITIAL_COIN_INDEX = COIN_COLORS.findIndex(
-  (coin) => coin.name === "Gold",
-);
+/** The coin on screen at the start of every game; later spawns are random.
+    Looked up in COIN_HUES rather than by matching a display string: the
+    tuple is typed, so a name that isn't in the palette fails to compile
+    instead of silently yielding -1 and an undefined coin. */
+const INITIAL_COIN_INDEX = COIN_HUES.indexOf("gold");
 
 const randomCoinIndex = () =>
   Math.floor(Math.random() * COIN_COLORS.length);
@@ -866,7 +863,7 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
               height: boardHeight,
               "--frame-line": `${FRAME_LINE}px`,
               "--frame-gap": `${FRAME_GAP}px`,
-              "--frame-color": "#1e1eff",
+              "--frame-color": PALETTE.blue,
             } as React.CSSProperties
           }
           onTouchStart={handleTouchStart}

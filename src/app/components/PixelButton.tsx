@@ -3,9 +3,10 @@ import { PixelArt } from "./PixelArt";
 
 type PixelColor =
   | "blue"
-  | "pink"
+  | "red"
   | "purple"
-  | "peach"
+  | "orange"
+  | "green"
   | "white"
   | "neutral"
   | "white-green"

@@ -131,15 +131,25 @@
   filter: saturate(0.35);
 }
 
-/* ---- colourways ---- */
-.pixel-btn--blue   { --base: #1e1eff; --shade: #1414c8; --light: #5a5aff; }
-.pixel-btn--pink   { --base: #f4609c; --shade: #ed408f; --light: #ff83b3; }
-.pixel-btn--purple { --base: #a658f9; --shade: #8a3eed; --light: #bf76ff; }
-.pixel-btn--peach  { --base: #ffba6e; --shade: #fc954f; --light: #ffd983; }
+/* ---- colourways ----
+
+   A solid-body button is one line: the shaded lower band and the focus
+   highlight are mixed from its base, so a new colour cannot drift out of
+   step with the rest of the button. Hues come from src/app/palette.ts. */
+.pixel-btn {
+  --shade: color-mix(in srgb, var(--base) 80%, #000);
+  --light: color-mix(in srgb, var(--base) 72%, #fff);
+}
+
+.pixel-btn--blue    { --base: var(--c-blue); }
+.pixel-btn--red     { --base: var(--c-red); }
+.pixel-btn--purple  { --base: var(--c-purple); }
+.pixel-btn--orange  { --base: var(--c-orange); }
+.pixel-btn--green   { --base: var(--c-green); }
 /* Pale body, so the icon has to flip dark or it disappears. */
-.pixel-btn--white  { --base: #ffffff; --shade: #d4d4d4; --light: #1e1eff; --ink: #2d2d2d; }
+.pixel-btn--white  { --base: #ffffff; --shade: #d4d4d4; --light: var(--c-blue); --ink: #2d2d2d; }
 /* Deliberately muted – for actions that shouldn't compete with the game. */
-.pixel-btn--neutral { --base: #7a7a7a; --shade: #5c5c5c; --light: #9e9e9e; }
+.pixel-btn--neutral { --base: #7a7a7a; }
 
 /* White body, coloured icon and outline, one hue per action – green to
    start over, blue for audio, sun-gold for the theme toggle.
@@ -151,17 +161,17 @@
    and the drop shadow instead of the shading band. */
 .pixel-btn--white-green {
   --base: #ffffff; --shade: #ffffff;
-  --light: #4ade80; --ink: #12a53f; --outline: #12a53f;
+  --light: var(--c-green); --ink: var(--c-green-deep); --outline: var(--c-green-deep);
 }
 
 .pixel-btn--white-blue {
   --base: #ffffff; --shade: #ffffff;
-  --light: #7aa8ff; --ink: #1e6fff; --outline: #1e6fff;
+  --light: var(--c-cyan); --ink: var(--c-cyan-deep); --outline: var(--c-cyan-deep);
 }
 
 .pixel-btn--white-gold {
   --base: #ffffff; --shade: #ffffff;
-  --light: #ffd983; --ink: #e07b00; --outline: #e07b00;
+  --light: var(--c-gold); --ink: var(--c-gold-deep); --outline: var(--c-gold-deep);
 }
 
 /* On the dark theme both the icon and the outline take the neon tone of the
@@ -177,18 +187,18 @@
    each other – because up there the outline is drawn against a white page
    and the bright tones vanish into it entirely. */
 .dark .pixel-btn--white-green {
-  --ink: #4ade80;
-  --outline: #4ade80;
+  --ink: var(--c-green);
+  --outline: var(--c-green);
 }
 
 .dark .pixel-btn--white-blue {
-  --ink: #7fe9ff;
-  --outline: #7fe9ff;
+  --ink: var(--c-cyan);
+  --outline: var(--c-cyan);
 }
 
 .dark .pixel-btn--white-gold {
-  --ink: #ffd83d;
-  --outline: #ffd83d;
+  --ink: var(--c-gold);
+  --outline: var(--c-gold);
 }
 
 /* A pure black drop shadow vanishes on the dark board, so tint it with the
@@ -266,22 +276,22 @@
    that unregistered custom properties don't interpolate. */
 @keyframes board-frame-cycle {
   0% {
-    --frame-color: #ff6b6b;
+    --frame-color: var(--c-red);
   }
   20% {
-    --frame-color: #4ecdc4;
+    --frame-color: var(--c-gold);
   }
   40% {
-    --frame-color: #45b7d1;
+    --frame-color: var(--c-green);
   }
   60% {
-    --frame-color: #f7dc6f;
+    --frame-color: var(--c-cyan);
   }
   80% {
-    --frame-color: #bb8fce;
+    --frame-color: var(--c-purple);
   }
   100% {
-    --frame-color: #ff6b6b;
+    --frame-color: var(--c-red);
   }
 }
 
@@ -294,7 +304,7 @@
    and a solid offset shadow – the same construction as the buttons, scaled
    up. Lives inside the board so it scales with it. */
 .game-over-panel {
-  background: #1e1eff;
+  background: var(--c-blue);
   color: #fff;
   padding: 14px 20px 16px;
   text-align: center;
@@ -388,12 +398,12 @@
    (about 1.5:1), so that theme gets the coin's darker shade instead. */
 .score-value,
 .score-gain {
-  color: #b06a10;
+  color: var(--c-gold-deep);
 }
 
 .dark .score-value,
 .dark .score-gain {
-  color: #ffd83d;
+  color: var(--c-gold);
 }
 
 /* The other two readouts get their own colour so the row scans as three
@@ -401,26 +411,26 @@
    dark theme, a darker shade on the light theme's white page. Every pair
    clears 4.5:1 against its own background. */
 .high-value {
-  color: #0e6d85;
+  color: var(--c-cyan-deep);
 }
 
 .dark .high-value {
-  color: #7fe9ff;
+  color: var(--c-cyan);
 }
 
 .level-value {
-  color: #1a7a3c;
+  color: var(--c-green-deep);
 }
 
 .dark .level-value {
-  color: #4ade80;
+  color: var(--c-green);
 }
 
 /* Restarted by re-keying the element, so every pickup flashes afresh. */
 @keyframes score-flash {
   0%,
   100% {
-    color: #ffd83d;
+    color: var(--c-gold);
   }
   50% {
     color: #ffffff;
@@ -464,13 +474,13 @@
 @keyframes multiplier-blink {
   0%,
   50% {
-    background: #7fe9ff;
+    background: var(--c-cyan);
     color: #2d2d2d;
   }
   51%,
   100% {
     background: #2d2d2d;
-    color: #7fe9ff;
+    color: var(--c-cyan);
   }
 }
 
@@ -530,22 +540,22 @@
    so the backdrop, the title glow and the board frame move together. */
 @keyframes neon-cycle {
   0% {
-    --neon: 255 107 107;
+    --neon: var(--c-red-rgb);
   }
   20% {
-    --neon: 78 205 196;
+    --neon: var(--c-gold-rgb);
   }
   40% {
-    --neon: 69 183 209;
+    --neon: var(--c-green-rgb);
   }
   60% {
-    --neon: 247 220 111;
+    --neon: var(--c-cyan-rgb);
   }
   80% {
-    --neon: 187 143 206;
+    --neon: var(--c-purple-rgb);
   }
   100% {
-    --neon: 255 107 107;
+    --neon: var(--c-red-rgb);
   }
 }
 
