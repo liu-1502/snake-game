@@ -128,8 +128,8 @@ export const paletteVars = Object.fromEntries([
     hex,
   ]),
   ["--side-weave", dashWeave(PALETTE.blue)],
-  /* Azure, not a tint of the brand blue: tinting #1e1eff holds hue 240 and
-     the eye calls that violet. Carried most of the way to the diamond's cyan
-     it lands on a pale blue that actually reads blue. */
-  ["--bottom-dots", dotField(mix(PALETTE.blue, PALETTE.cyan, 0.72))],
+  /* The same brand blue the corner weave uses – the two are one family of
+     page dressing. It reads paler than the corners because the stylesheet
+     runs it at a lower opacity, not because the hue differs. */
+  ["--bottom-dots", dotField(PALETTE.blue)],
 ]) as Record<string, string>;

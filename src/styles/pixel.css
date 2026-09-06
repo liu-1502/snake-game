@@ -668,8 +668,14 @@
 
 /* Halftone dots rising off the foot of the page – a separate piece of
    dressing from the corner weave above, and a different motif: dots, not
-   dashes. Densest along the bottom edge and thinning upward, which the mask
-   does; the tile itself is an even grid. */
+   dashes.
+
+   Two grids, not one. A halftone gets its gradient from the dots changing
+   size, so a fine grid runs the full height and a coarse one sits only along
+   the bottom, its spacing an exact multiple of the fine one so the big dots
+   land on top of small ones and read as the same dot growing. Fading a
+   single even grid would only make it dimmer, which is a different effect
+   and not a pixel one. */
 .bottom-dots {
   position: absolute;
   left: 0;
@@ -678,16 +684,29 @@
   height: 55%;
   background-image: var(--bottom-dots);
   background-size: 12px 12px;
-  opacity: 0.25;
+  opacity: 0.18;
   pointer-events: none;
   z-index: -1;
   mask-image: linear-gradient(to top, #000 0%, transparent 85%);
 }
 
+/* The coarse grid. Its own fade compounds with the parent's, so it dies out
+   well before the fine dots do. */
+.bottom-dots::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--bottom-dots);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(to top, #000 0%, transparent 45%);
+}
+
 .dark .bottom-dots {
-  /* Higher here for the same reason the corners are: the vignette takes the
-     page edges down by three quarters, and the foot is one of them. */
-  opacity: 0.7;
+  /* Below the corners' 0.9 – same hue, carried lighter, which is what keeps
+     it behind the game instead of competing with it. Still well up because
+     the vignette takes the page edges down by three quarters, and the foot
+     is one of them. */
+  opacity: 0.55;
 }
 
 /* Pixel weave in the two upper corners of the page.
