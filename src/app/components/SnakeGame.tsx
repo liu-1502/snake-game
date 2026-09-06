@@ -823,12 +823,12 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
           <div className="w-0.5 h-[0.875em] bg-foreground/25" />
           <div className="flex items-center gap-1 sm:gap-2">
             <span className="text-muted-foreground">High:</span>
-            <span className="tabular-nums">{highScore}</span>
+            <span className="tabular-nums high-value">{highScore}</span>
           </div>
           <div className="w-0.5 h-[0.875em] bg-foreground/25" />
           <div className="flex items-center gap-1 sm:gap-2">
             <span className="text-muted-foreground">Level:</span>
-            <span className="tabular-nums">{level}</span>
+            <span className="tabular-nums level-value">{level}</span>
           </div>
         </div>
       </div>
@@ -992,10 +992,14 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
       </div>
 
           {!isPlaying && !isGameOver && (
-            /* Near the top of the board, well clear of the snake, which
-               always starts in the middle. Measured in cells so it keeps
-               its place if the board size changes. */
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 sm:gap-4 pointer-events-none [--play-u:1px] sm:[--play-u:2px]">
+            /* The snake always starts on the middle cell, so the prompt hangs
+               from the centre line rather than straddling it – offset by a
+               cell and a half, which clears the head with half a cell to
+               spare at any board scale. */
+            <div
+              className="absolute inset-x-0 top-1/2 flex flex-col items-center gap-3 sm:gap-4 pointer-events-none [--play-u:1px] sm:[--play-u:2px]"
+              style={{ marginTop: CELL_SIZE * boardScale * 1.5 }}
+            >
               {/* The sprite flows inline with the text rather than sitting in
                   a flex row, so it stays glued to the first word when the
                   prompt wraps onto two lines on a phone. */}

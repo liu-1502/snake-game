@@ -141,6 +141,25 @@
 /* Deliberately muted – for actions that shouldn't compete with the game. */
 .pixel-btn--neutral { --base: #7a7a7a; --shade: #5c5c5c; --light: #9e9e9e; }
 
+/* White body, coloured icon and outline. The icon has to clear the #d4d4d4
+   shade band as well as the white top band, so these are the deeper ends of
+   each hue rather than the bright d-pad tones – the pale ones drop to about
+   2.5:1 down there and the sprite goes mushy. */
+.pixel-btn--white-blue {
+  --base: #ffffff; --shade: #d4d4d4;
+  --light: #5a5aff; --ink: #1e1eff; --outline: #1e1eff;
+}
+
+.pixel-btn--white-purple {
+  --base: #ffffff; --shade: #d4d4d4;
+  --light: #bf76ff; --ink: #8a3eed; --outline: #8a3eed;
+}
+
+.pixel-btn--white-amber {
+  --base: #ffffff; --shade: #d4d4d4;
+  --light: #ffd983; --ink: #8a5008; --outline: #8a5008;
+}
+
 /* A pure black drop shadow vanishes on the dark board, so tint it with the
    button's own hue instead – the depth still reads. */
 .dark .pixel-btn {
@@ -344,6 +363,26 @@
 .dark .score-value,
 .dark .score-gain {
   color: #ffd83d;
+}
+
+/* The other two readouts get their own colour so the row scans as three
+   separate figures. Same split as the score: the bright arcade tone on the
+   dark theme, a darker shade on the light theme's white page. Every pair
+   clears 4.5:1 against its own background. */
+.high-value {
+  color: #0e6d85;
+}
+
+.dark .high-value {
+  color: #7fe9ff;
+}
+
+.level-value {
+  color: #1a7a3c;
+}
+
+.dark .level-value {
+  color: #4ade80;
 }
 
 /* Restarted by re-keying the element, so every pickup flashes afresh. */
