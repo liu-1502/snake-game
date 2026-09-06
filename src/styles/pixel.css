@@ -262,11 +262,11 @@
      white, the light-theme grey, and all five boost colours – black beats
      #2d2d2d on each one, by between 1.5x and 1.7x. */
   --tv-edge: #000000;
-  /* The moulding at rest. White on the dark theme, as asked; on the light
-     theme white would be the page colour and the whole set would vanish
-     into it, so that one takes a grey plastic instead. The multiplier
-     animation overrides this – keyframes beat a normal declaration. */
-  --frame-color: #d5d5d5;
+  /* The moulding at rest. One colour for both themes now that it is the
+     brand blue – the grey/white split existed only because white was the
+     light theme's page colour and the set vanished into it. The multiplier
+     animation overrides this: keyframes beat a normal declaration. */
+  --frame-color: var(--c-blue);
   background: var(--frame-color);
   /* The dark rim is drawn inside the moulding rather than around it: an
      outset shadow would fall outside the clip and be cut away. */
@@ -323,10 +323,6 @@
   100% {
     --frame-color: var(--c-red);
   }
-}
-
-.dark .tv-bezel {
-  --frame-color: #ffffff;
 }
 
 /* The inner frame, and the power button moulded into the chin. Both are the
