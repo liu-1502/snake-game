@@ -37,6 +37,17 @@ export const PALETTE_DEEP = {
   green: "#1a7a3c",
 } as const;
 
+/**
+ * The colour the game is *in*: the snake, the set, the glow off the tube.
+ *
+ * A role, not a hue, and that is the point – it can be swapped here without
+ * disturbing `blue` and `green` themselves, which stay available as coin
+ * hues, d-pad keys and stat colours. Those are deliberately left alone: they
+ * are a set of colours told apart from each other, so pulling one of them to
+ * follow the brand would collapse a distinction rather than carry one.
+ */
+export const BRAND: PaletteName = "green";
+
 /** Hues the coin cycles through as you eat. */
 export const COIN_HUES = [
   "gold",
@@ -101,6 +112,8 @@ export const paletteVars = Object.fromEntries([
     `--c-${name}-deep`,
     hex,
   ]),
+  ["--c-brand", PALETTE[BRAND]],
+  ["--c-brand-rgb", toRgbTriplet(PALETTE[BRAND])],
   /* Two tiles whose sizes share no useful factor, so the combined repeat is
      far wider than any screen – with this few stars a single tile would show
      its lattice straight away. */

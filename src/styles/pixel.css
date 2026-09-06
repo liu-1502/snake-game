@@ -146,6 +146,7 @@
 .pixel-btn--purple  { --base: var(--c-purple); }
 .pixel-btn--orange  { --base: var(--c-orange); }
 .pixel-btn--green   { --base: var(--c-green); }
+.pixel-btn--brand   { --base: var(--c-brand); }
 /* Pale body, so the icon has to flip dark or it disappears. */
 .pixel-btn--white  { --base: #ffffff; --shade: #d4d4d4; --light: var(--c-blue); --ink: #2d2d2d; }
 /* Deliberately muted – for actions that shouldn't compete with the game. A
@@ -266,7 +267,7 @@
      brand blue – the grey/white split existed only because white was the
      light theme's page colour and the set vanished into it. The multiplier
      animation overrides this: keyframes beat a normal declaration. */
-  --frame-color: var(--c-blue);
+  --frame-color: var(--c-brand);
   background: var(--frame-color);
   /* The dark rim is drawn inside the moulding rather than around it: an
      outset shadow would fall outside the clip and be cut away. */
@@ -425,7 +426,7 @@
    is two classes deep – a bare `.tv-bezel--over` would lose to it. */
 .tv-bezel--over,
 .dark .tv-bezel--over {
-  --frame-color: var(--c-blue);
+  --frame-color: var(--c-brand);
 }
 
 .tv-bezel--boost {
@@ -437,7 +438,10 @@
    and a solid offset shadow – the same construction as the buttons, scaled
    up. Lives inside the board so it scales with it. */
 .game-over-panel {
-  background: var(--c-blue);
+  /* Darkened from the brand rather than set to it: the type on this panel is
+     white, and the brand at full strength puts it near 2:1. Held as light as
+     that type allows – 4.3:1 – rather than as dark as it could be. */
+  background: color-mix(in srgb, var(--c-brand) 70%, #000);
   color: #fff;
   padding: 14px 20px 16px;
   text-align: center;
@@ -645,7 +649,7 @@
   /* The tube's hue. Taken from the palette's blue so the sign, the pool of
      light behind it and the board frame all glow the same colour the snake
      is. The multiplier cycle overrides it. */
-  --neon: var(--c-blue-rgb);
+  --neon: var(--c-brand-rgb);
   /* Faint light lines for dark surfaces, faint dark lines for bright ones.
      Always applied as a background layer, never as an overlay – that way
      sprites and text painted on top of it stay perfectly clean. */
@@ -664,7 +668,7 @@
   --scanlines-on-bright: repeating-linear-gradient(
     to bottom,
     transparent 0 2px,
-    rgb(0 0 0 / 0.16) 2px 4px
+    rgb(0 0 0 / 0.08) 2px 4px
   );
 }
 

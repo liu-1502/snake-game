@@ -1,4 +1,4 @@
-import { PALETTE } from "../palette";
+import { BRAND, PALETTE } from "../palette";
 export interface Sprite {
   /** One character per pixel; a character with no palette entry is transparent. */
   rows: string[];
@@ -193,8 +193,8 @@ export const SNAKE_HEAD: Sprite = {
     "DDDDDDDDDD",
   ],
   palette: {
-    D: `color-mix(in srgb, ${PALETTE.blue} 80%, #000)`,
-    B: PALETTE.blue,
+    D: `color-mix(in srgb, ${PALETTE[BRAND]} 80%, #000)`,
+    B: PALETTE[BRAND],
     W: "#ffffff",
     K: "#1a1a1a",
   },
@@ -215,7 +215,7 @@ export const SNAKE_TAIL: Sprite = {
     "..........",
   ],
   palette: {
-    D: `color-mix(in srgb, ${PALETTE.blue} 80%, #000)`,
-    B: PALETTE.blue,
+    D: `color-mix(in srgb, ${PALETTE[BRAND]} 80%, #000)`,
+    B: PALETTE[BRAND],
   },
 };

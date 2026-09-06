@@ -7,6 +7,7 @@ type PixelColor =
   | "purple"
   | "orange"
   | "green"
+  | "brand"
   | "white"
   | "neutral"
   | "white-blue"

@@ -9,7 +9,7 @@ import {
 } from "react";
 import { PixelButton, PixelIcon } from "./PixelButton";
 import { sfx } from "../sfx";
-import { COIN_HUES, PALETTE } from "../palette";
+import { BRAND, COIN_HUES, PALETTE } from "../palette";
 import {
   PixelArt,
   COIN,
@@ -40,7 +40,7 @@ const ARROW_HEADINGS: Record<string, Direction> = {
 const DPAD = [
   { direction: "LEFT", rotate: 270, label: "Move left", color: "red" },
   { direction: "UP", rotate: 0, label: "Move up", color: "blue" },
-  { direction: "DOWN", rotate: 180, label: "Move down", color: "purple" },
+  { direction: "DOWN", rotate: 180, label: "Move down", color: "brand" },
   { direction: "RIGHT", rotate: 90, label: "Move right", color: "orange" },
 ] as const;
 
@@ -83,7 +83,7 @@ const CHROME_HEIGHT = 348;
 const HIGH_SCORE_KEY = "snake-high-score";
 // Starts as a bare head; every heart eaten adds one segment.
 /** Same blue as the board frame and the d-pad buttons. */
-const INITIAL_SNAKE_COLOR = PALETTE.blue;
+const INITIAL_SNAKE_COLOR = PALETTE[BRAND];
 const INITIAL_DIRECTION: Direction = "UP";
 const INITIAL_SPEED = 150;
 const MIN_SPEED = 50; // Fastest possible speed
