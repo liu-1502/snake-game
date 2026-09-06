@@ -1,0 +1,33 @@
+/* Press Start 2P (SIL OFL 1.1) – the open replica of the Namco arcade face
+   used by Pac-Man / Ms. Pac-Man. Self-hosted so the game works offline.
+   Latin subset only: 4.7 kB. */
+@font-face {
+  font-family: "Press Start 2P";
+  font-style: normal;
+  font-weight: 400;
+  /* `block` rather than `swap`: the file is tiny, and a flash of serif
+     before the pixel face is worse than a few ms of nothing. */
+  font-display: block;
+  src: url("../assets/fonts/press-start-2p-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+2000-206F, U+2122, U+2191, U+2193, U+2212, U+2215;
+}
+
+/* The glyphs sit on an 8x8 grid, so only font sizes that are multiples of
+   8px land on whole pixels – anything else gets fuzzy edges. Every size in
+   this app is 8 / 16 / 24 / 32. */
+body {
+  font-family: "Press Start 2P", "Courier New", monospace;
+  /* no subpixel smoothing – these glyphs are meant to be hard-edged */
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  line-height: 1.7;
+}
+
+/* Bold is a synthesised smear on a pixel face; keep the weight flat and use
+   colour for emphasis instead. */
+b,
+strong {
+  font-weight: 400;
+  color: var(--foreground);
+}

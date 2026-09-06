@@ -1,0 +1,122 @@
+import { useState, useEffect, useRef } from "react";
+import { SnakeGame } from "./components/SnakeGame";
+import { motion } from "motion/react";
+import { PixelButton, PixelIcon } from "./components/PixelButton";
+import { sfx } from "./sfx";
+
+export default function App() {
+  const [isDark, setIsDark] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [isMuted, setIsMuted] = useState(() => sfx.isMuted());
+  const [isBoosted, setIsBoosted] = useState(false);
+  const snakeGameRef = useRef<{ resetGame: () => void }>(null);
+
+  /* Give the page keyboard focus on load. Without this, a key pressed
+     before the first click goes nowhere – the document never had focus, so
+     no keydown reaches the game. */
+  useEffect(() => {
+    window.focus();
+    if (document.activeElement === document.body) return;
+    (document.activeElement as HTMLElement | null)?.blur?.();
+  }, []);
+
+  useEffect(() => {
+    // Check system preference on mount
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    ).matches;
+    setIsDark(prefersDark);
+  }, []);
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDark]);
+
+  return (
+    <div className={`neon-stage${isBoosted ? " neon-stage--boost" : ""} size-full min-h-screen flex flex-col items-center justify-center p-2 min-[375px]:p-4 sm:p-8 bg-background text-foreground`}>
+      <div className="flex flex-col items-center gap-4 sm:gap-16 w-full pt-2 min-[375px]:pt-4 sm:pt-8 pb-2 min-[375px]:pb-4 sm:pb-8">
+        {/* Header. On a phone the controls take their own row and the title
+            drops below them with the full width to itself – squeezed into a
+            middle column it wrapped to five lines. From sm up it is one row
+            with the title centred between the two control groups. */}
+        <div className="grid grid-cols-2 sm:grid-cols-[1fr_auto_1fr] items-center gap-y-3 gap-x-2 w-full">
+          <div className="col-start-1 row-start-1 justify-self-start">
+            <PixelButton
+              color="neutral"
+              onClick={() => snakeGameRef.current?.quitGame()}
+              className="w-10 h-10 sm:w-11 sm:h-11"
+              aria-label="Quit game"
+            >
+              <PixelIcon sprite="close" />
+            </PixelButton>
+          </div>
+
+          <div className="col-start-1 col-span-2 row-start-2 sm:col-start-2 sm:col-span-1 sm:row-start-1 text-center">
+            <h1 className="neon-title text-[16px] min-[375px]:text-[24px] sm:text-[32px] leading-tight [word-spacing:-0.375em]">
+              Snake Game
+            </h1>
+          </div>
+
+          <div className="col-start-2 row-start-1 sm:col-start-3 justify-self-end flex gap-2 min-[375px]:gap-2.5">
+            <motion.div
+              animate={isGameOver ? { scale: [1, 1.12, 1] } : {}}
+              transition={
+                isGameOver
+                  ? {
+                      duration: 0.6,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }
+                  : {}
+              }
+            >
+              <PixelButton
+                color="white"
+                onClick={() => snakeGameRef.current?.resetGame()}
+                className="w-10 h-10 sm:w-11 sm:h-11"
+                aria-label="Restart game"
+              >
+                <PixelIcon sprite="restart" />
+              </PixelButton>
+            </motion.div>
+            <PixelButton
+              color="white"
+              onClick={() => {
+                const next = !isMuted;
+                sfx.setMuted(next);
+                setIsMuted(next);
+              }}
+              className="w-10 h-10 sm:w-11 sm:h-11"
+              aria-label={isMuted ? "Unmute" : "Mute"}
+              aria-pressed={isMuted}
+            >
+              <PixelIcon sprite={isMuted ? "mute" : "sound"} />
+            </PixelButton>
+            <PixelButton
+              color="white"
+              onClick={() => setIsDark(!isDark)}
+              className="w-10 h-10 sm:w-11 sm:h-11"
+              aria-label="Toggle theme"
+            >
+              <PixelIcon sprite={isDark ? "sun" : "moon"} />
+            </PixelButton>
+          </div>
+        </div>
+
+        <SnakeGame
+          ref={snakeGameRef}
+          onGameOverChange={setIsGameOver}
+          onBoostChange={setIsBoosted}
+        />
+      </div>
+
+      {/* Fixed, above the game, ignored by the pointer. Hidden on the light
+          theme – a vignette only makes sense on a dark screen. */}
+      <div className="crt-vignette fixed" />
+    </div>
+  );
+}

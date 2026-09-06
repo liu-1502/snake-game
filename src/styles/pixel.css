@@ -1,0 +1,550 @@
+/* ------------------------------------------------------------------
+   Pixel-art buttons
+   Palette + construction taken from the reference sprite sheet:
+   hard #2D2D2D outline, two-tone pastel body, white gloss dash and a
+   solid drop shadow the button sinks into when pressed.
+   ------------------------------------------------------------------ */
+
+.pixel-btn {
+  --u: 3px;
+  --outline: #2d2d2d;
+  --shadow: #050505;
+  /* icon colour – dark-bodied buttons keep white, pale ones override it */
+  --ink: #fff;
+
+  position: relative;
+  display: inline-block;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Stepped corners – one shape reused by the shadow, the outline and the
+   body, so every layer keeps the same pixel silhouette. */
+.pixel-btn__ring,
+.pixel-btn__shadow,
+.pixel-btn__face,
+.pixel-btn__body {
+  clip-path: polygon(
+    calc(var(--u) * 2) 0,
+    calc(100% - var(--u) * 2) 0,
+    calc(100% - var(--u) * 2) var(--u),
+    calc(100% - var(--u)) var(--u),
+    calc(100% - var(--u)) calc(var(--u) * 2),
+    100% calc(var(--u) * 2),
+    100% calc(100% - var(--u) * 2),
+    calc(100% - var(--u)) calc(100% - var(--u) * 2),
+    calc(100% - var(--u)) calc(100% - var(--u)),
+    calc(100% - var(--u) * 2) calc(100% - var(--u)),
+    calc(100% - var(--u) * 2) 100%,
+    calc(var(--u) * 2) 100%,
+    calc(var(--u) * 2) calc(100% - var(--u)),
+    var(--u) calc(100% - var(--u)),
+    var(--u) calc(100% - var(--u) * 2),
+    0 calc(100% - var(--u) * 2),
+    0 calc(var(--u) * 2),
+    var(--u) calc(var(--u) * 2),
+    var(--u) var(--u),
+    calc(var(--u) * 2) var(--u)
+  );
+}
+
+/* Focus ring, cut to the same stepped silhouette as the button – a plain
+   `outline` draws a square box around the cut corners and reads as a stray
+   frame. Sits first so it paints behind the shadow and face. */
+.pixel-btn__ring {
+  position: absolute;
+  inset: calc(var(--u) * -2);
+  background: var(--light);
+  opacity: 0;
+}
+
+.pixel-btn:focus-visible .pixel-btn__ring {
+  opacity: 1;
+}
+
+.pixel-btn__shadow {
+  position: absolute;
+  inset: 0;
+  background: var(--shadow);
+  transform: translate(var(--u), var(--u));
+}
+
+.pixel-btn__face {
+  position: absolute;
+  inset: 0;
+  background: var(--outline);
+}
+
+.pixel-btn__body {
+  position: absolute;
+  inset: var(--u);
+  /* hard stop, no smooth gradient – the lower band is the shaded side */
+  background: linear-gradient(
+    to bottom,
+    var(--base) 0 64%,
+    var(--shade) 64% 100%
+  );
+}
+
+/* white gloss dash, top-left */
+.pixel-btn__gloss {
+  position: absolute;
+  top: var(--u);
+  left: calc(var(--u) * 2);
+  width: calc(var(--u) * 3);
+  height: var(--u);
+  background: #fff;
+}
+
+.pixel-btn__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+}
+
+/* press: the button drops into its own shadow */
+.pixel-btn:active .pixel-btn__face,
+.pixel-btn:active .pixel-btn__content {
+  transform: translate(var(--u), var(--u));
+}
+.pixel-btn:active .pixel-btn__shadow {
+  opacity: 0;
+}
+
+.pixel-btn:hover .pixel-btn__body {
+  filter: brightness(1.07);
+}
+
+.pixel-btn:focus-visible {
+  outline: none;
+}
+
+.pixel-btn:disabled {
+  cursor: default;
+  filter: saturate(0.35);
+}
+
+/* ---- colourways ---- */
+.pixel-btn--blue   { --base: #1e1eff; --shade: #1414c8; --light: #5a5aff; }
+.pixel-btn--pink   { --base: #f4609c; --shade: #ed408f; --light: #ff83b3; }
+.pixel-btn--purple { --base: #a658f9; --shade: #8a3eed; --light: #bf76ff; }
+.pixel-btn--peach  { --base: #ffba6e; --shade: #fc954f; --light: #ffd983; }
+/* Pale body, so the icon has to flip dark or it disappears. */
+.pixel-btn--white  { --base: #ffffff; --shade: #d4d4d4; --light: #1e1eff; --ink: #2d2d2d; }
+/* Deliberately muted – for actions that shouldn't compete with the game. */
+.pixel-btn--neutral { --base: #7a7a7a; --shade: #5c5c5c; --light: #9e9e9e; }
+
+/* A pure black drop shadow vanishes on the dark board, so tint it with the
+   button's own hue instead – the depth still reads. */
+.dark .pixel-btn {
+  --shadow: color-mix(in srgb, var(--base) 24%, #000);
+}
+
+/* ---- reward sprites ----------------------------------------------------
+   Pixel sprites must only ever move by whole pixels. Easing through
+   fractional offsets (or scaling / rotating at all) lands their edges
+   between device pixels and turns crisp art to mush – so the idle hop
+   snaps between two positions with steps(). */
+@keyframes pixel-bob {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.pixel-bob {
+  animation: pixel-bob 0.9s steps(1, end) infinite;
+}
+
+/* Opacity is grid-safe, so the rare pickup's halo can pulse smoothly. */
+@keyframes pixel-glow {
+  0%,
+  100% {
+    opacity: 0.12;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.pixel-glow {
+  animation: pixel-glow 1.1s ease-in-out infinite;
+}
+
+/* ---- snake ------------------------------------------------------------
+   Body segments are plain divs rather than sprites: a 2px dark border plus
+   a 2px inset highlight gives the same bevelled pixel block for a fraction
+   of the cost, and the border is direction-independent, so it works on
+   straights and corners alike. Neighbouring segments meet as a 4px dark
+   seam, which is what reads as segmentation. */
+.snake-seg {
+  position: absolute;
+  box-sizing: border-box;
+  border: 2px solid var(--seg-dark);
+  background: var(--seg-base);
+  box-shadow: inset 2px 2px 0 var(--seg-light);
+}
+
+/* ---- board frame -------------------------------------------------------
+   Two concentric rules rather than one solid band. Drawn as three stacked
+   box-shadow rings on the board itself, so they paint into the wrapper's
+   padding without taking part in layout. The middle ring has to be an
+   opaque colour, not `transparent` – a transparent layer would just let the
+   outer ring show through and close the gap. */
+.board-frame {
+  box-shadow:
+    0 0 0 var(--frame-line) var(--frame-color),
+    0 0 0 calc(var(--frame-line) + var(--frame-gap)) var(--background),
+    0 0 0 calc(var(--frame-line) * 2 + var(--frame-gap))
+      var(--frame-color);
+}
+
+/* Multiplier: step the rules through the palette. `steps` keeps it reading
+   as an 8-bit blink rather than a smooth crossfade, and sidesteps the fact
+   that unregistered custom properties don't interpolate. */
+@keyframes board-frame-cycle {
+  0% {
+    --frame-color: #ff6b6b;
+  }
+  20% {
+    --frame-color: #4ecdc4;
+  }
+  40% {
+    --frame-color: #45b7d1;
+  }
+  60% {
+    --frame-color: #f7dc6f;
+  }
+  80% {
+    --frame-color: #bb8fce;
+  }
+  100% {
+    --frame-color: #ff6b6b;
+  }
+}
+
+.board-frame--boost {
+  animation: board-frame-cycle 2.5s steps(1, end) infinite;
+}
+
+/* ---- game over panel ---------------------------------------------------
+   Arcade end screen: flat colour block, hard dark outline, white inner rule
+   and a solid offset shadow – the same construction as the buttons, scaled
+   up. Lives inside the board so it scales with it. */
+.game-over-panel {
+  background: #1e1eff;
+  color: #fff;
+  padding: 14px 20px 16px;
+  text-align: center;
+  /* No outline: a #2d2d2d rule against the near-black board reads as a
+     washed-out grey rim rather than an edge. The flat block plus its offset
+     shadow is enough separation. */
+  box-shadow: 9px 9px 0 rgb(0 0 0 / 0.45);
+}
+
+@media (min-width: 640px) {
+  .game-over-panel {
+    padding: 28px 40px 32px;
+  }
+}
+
+/* ---- arcade motion -----------------------------------------------------
+   Every one of these steps between whole values instead of easing through
+   fractions: sub-pixel offsets and half-opacities are what make pixel art
+   look smeared. */
+
+/* Blinking prompt, the way a cabinet nags you to start. */
+@keyframes arcade-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.arcade-blink {
+  animation: arcade-blink 1s steps(1, end) infinite;
+}
+
+/* Death jolt. Offsets are whole pixels so the grid never lands off-grid. */
+@keyframes board-shake {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-4px, 2px);
+  }
+  40% {
+    transform: translate(4px, -2px);
+  }
+  60% {
+    transform: translate(-2px, -3px);
+  }
+  80% {
+    transform: translate(3px, 1px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+.board-shake {
+  animation: board-shake 0.3s steps(1, end) 1;
+}
+
+/* The panel flickers in after the jolt rather than fading or scaling –
+   scaling a pixel panel puts its glyph edges between device pixels. */
+@keyframes panel-flicker {
+  0%,
+  55% {
+    opacity: 0;
+  }
+  60%,
+  70% {
+    opacity: 1;
+  }
+  75%,
+  85% {
+    opacity: 0;
+  }
+  90%,
+  100% {
+    opacity: 1;
+  }
+}
+
+.game-over-panel {
+  animation: panel-flicker 0.55s steps(1, end) both;
+}
+
+/* ---- score ------------------------------------------------------------- */
+
+/* The coin's bright gold is unreadable on the light theme's white page
+   (about 1.5:1), so that theme gets the coin's darker shade instead. */
+.score-value,
+.score-gain {
+  color: #b06a10;
+}
+
+.dark .score-value,
+.dark .score-gain {
+  color: #ffd83d;
+}
+
+/* Restarted by re-keying the element, so every pickup flashes afresh. */
+@keyframes score-flash {
+  0%,
+  100% {
+    color: #ffd83d;
+  }
+  50% {
+    color: #ffffff;
+  }
+}
+
+.score-value--flash {
+  animation: score-flash 0.24s steps(1, end) 1;
+}
+
+/* The "+N" that floats off the score. 14px over 7 steps keeps every frame
+   on a whole pixel. */
+/* The translateX is part of every frame: the animation owns `transform`, so
+   centring it with a separate translate would be overwritten mid-rise. */
+@keyframes score-gain {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -14px);
+  }
+}
+
+.score-gain {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: score-gain 0.7s steps(7, end) forwards;
+}
+
+/* ---- multiplier badge --------------------------------------------------
+   Flat block in the diamond's own colour rather than a gradient pill – it
+   comes from the diamond, and a rounded gradient was the one non-pixel
+   element left on screen. Inverting the colours is a sturdier arcade blink
+   than fading opacity, and steps() keeps it snapping. */
+@keyframes multiplier-blink {
+  0%,
+  50% {
+    background: #7fe9ff;
+    color: #2d2d2d;
+  }
+  51%,
+  100% {
+    background: #2d2d2d;
+    color: #7fe9ff;
+  }
+}
+
+.multiplier-badge {
+  padding: 2px 4px;
+  animation: multiplier-blink 0.6s steps(1, end) infinite;
+}
+
+/* ---- neon / CRT dressing ----------------------------------------------
+   Phosphor-tube treatment for the whole game screen. Scoped to the dark
+   theme: a glow and a vignette only read as light coming off a tube when
+   the screen behind them is dark, and on the light theme they would just
+   smear the text. */
+.neon-stage {
+  --neon: 56 168 255;
+  /* Faint light lines for dark surfaces, faint dark lines for bright ones.
+     Always applied as a background layer, never as an overlay – that way
+     sprites and text painted on top of it stay perfectly clean. */
+  --scanlines-on-dark: repeating-linear-gradient(
+    to bottom,
+    transparent 0 2px,
+    rgb(var(--neon) / 0.013) 2px 4px
+  );
+  /* Fainter still on the play field: the grid lines already texture it, and
+     the two patterns together read as woven matting. */
+  --scanlines-on-field: repeating-linear-gradient(
+    to bottom,
+    transparent 0 2px,
+    rgb(var(--neon) / 0.007) 2px 4px
+  );
+  --scanlines-on-bright: repeating-linear-gradient(
+    to bottom,
+    transparent 0 2px,
+    rgb(0 0 0 / 0.16) 2px 4px
+  );
+}
+
+/* A pool of light behind the title rather than a wash over the whole page –
+   sized and placed in percentages so it tracks the header at any viewport.
+   Still derived from --neon so it follows the hue when the multiplier
+   cycles it. */
+.dark .neon-stage {
+  /* Neutral, not a navy-black: rgb(1,7,13) put a blue cast across the whole
+     page, which read as neon spill far from the title. The glow should come
+     only from the gradient below. */
+  background-color: #060606;
+  background-image:
+    var(--scanlines-on-dark),
+    radial-gradient(
+      ellipse 55% 26% at 50% 9%,
+      rgb(var(--neon) / 0.1) 0%,
+      transparent 72%
+    );
+}
+
+/* Same five colours and the same 2.5s step timing as `board-frame-cycle`,
+   so the backdrop, the title glow and the board frame move together. */
+@keyframes neon-cycle {
+  0% {
+    --neon: 255 107 107;
+  }
+  20% {
+    --neon: 78 205 196;
+  }
+  40% {
+    --neon: 69 183 209;
+  }
+  60% {
+    --neon: 247 220 111;
+  }
+  80% {
+    --neon: 187 143 206;
+  }
+  100% {
+    --neon: 255 107 107;
+  }
+}
+
+.dark .neon-stage--boost {
+  animation: neon-cycle 2.5s steps(1, end) infinite;
+}
+
+.dark .board-frame {
+  /* Same black as the page rather than the theme's grey card, so the play
+     field doesn't read as a lighter panel sitting on the background. */
+  background-color: #060606;
+  background-image: var(--scanlines-on-field);
+}
+
+/* Dark lines here – the panel is bright blue, so light ones would vanish. */
+.dark .game-over-panel {
+  background-image: var(--scanlines-on-bright);
+}
+
+/* Glows in whatever colour the text already is, so the gold score, the grey
+   labels and the white numbers each keep their own hue. */
+.dark .neon-glow {
+  text-shadow:
+    0 0 6px currentColor,
+    0 0 18px currentColor;
+}
+
+.dark .neon-title {
+  color: #cbe8ff;
+  text-shadow:
+    0 0 4px rgb(var(--neon)),
+    0 0 14px rgb(var(--neon)),
+    0 0 30px rgb(var(--neon) / 0.65);
+  animation: neon-flicker 5s steps(1, end) infinite;
+}
+
+/* A tube never sits perfectly still; the dropouts are stepped, not eased. */
+@keyframes neon-flicker {
+  0%,
+  90%,
+  93%,
+  96%,
+  100% {
+    opacity: 1;
+  }
+  91% {
+    opacity: 0.7;
+  }
+  94% {
+    opacity: 0.85;
+  }
+}
+
+.crt-vignette {
+  display: none;
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.dark .crt-vignette {
+  display: block;
+}
+
+.crt-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 45%,
+    rgb(0 0 0 / 0.75) 100%
+  );
+}
