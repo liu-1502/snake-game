@@ -51,30 +51,31 @@ export const toRgbTriplet = (hex: string): string => {
   return `${(n >> 16) & 255} ${(n >> 8) & 255} ${n & 255}`;
 };
 
-/**
- * A repeating pixel motif for the empty page either side of the set –
- * staggered dashes that read as rows of terminal text at a glance.
- *
- * Built as an SVG data URI rather than stacked CSS gradients: a gradient per
- * dash would run to a dozen layers and none of them would be legible as a
- * shape. `crispEdges` keeps the blocks square when the tile is scaled up.
- */
-export const dashWeave = (color: string): string => {
-  /* x, y, length – on a 16x16 grid, four rows of three dashes, offset row to
-     row so the tile does not read as columns. */
-  const dashes: [number, number, number][] = [
-    [1, 1, 3], [6, 1, 2], [10, 1, 4],
-    [2, 5, 2], [6, 5, 4], [12, 5, 2],
-    [1, 9, 4], [7, 9, 2], [11, 9, 3],
-    [3, 13, 2], [7, 13, 3], [12, 13, 2],
-  ];
-  const rects = dashes
-    .map(([x, y, w]) => `<rect x="${x}" y="${y}" width="${w}" height="1"/>`)
+/** Mixes a hex colour toward white. 0 leaves it, 1 is white. */
+export const lighten = (hex: string, amount: number): string => {
+  const h = hex.replace("#", "");
+  const n = parseInt(h, 16);
+  const mix = (c: number) => Math.round(c + (255 - c) * amount);
+  const out = [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+    .map((c) => mix(c).toString(16).padStart(2, "0"))
     .join("");
+  return `#${out}`;
+};
+
+/**
+ * A halftone dot field for the empty page either side of the set – a plain
+ * square-dot grid, which the corner mask in the stylesheet then thins out
+ * with distance to give the fade.
+ *
+ * Built as an SVG data URI rather than a CSS radial-gradient because a
+ * gradient dot has a soft edge: at this size it reads as a blur rather than
+ * as a pixel. `crispEdges` keeps the dots square when the tile is scaled up.
+ */
+export const dotField = (color: string): string => {
   const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" ` +
-    `viewBox="0 0 16 16" fill="${color}" shape-rendering="crispEdges">` +
-    `${rects}</svg>`;
+    `<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" ` +
+    `viewBox="0 0 8 8" fill="${color}" shape-rendering="crispEdges">` +
+    `<rect x="0" y="0" width="2" height="2"/></svg>`;
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 };
 
@@ -94,5 +95,7 @@ export const paletteVars = Object.fromEntries([
     `--c-${name}-deep`,
     hex,
   ]),
-  ["--side-weave", dashWeave(PALETTE.blue)],
+  /* Paler than the brand blue: at full strength the dots read as a solid
+     field rather than as a texture behind the page. */
+  ["--side-weave", dotField(lighten(PALETTE.blue, 0.55))],
 ]) as Record<string, string>;

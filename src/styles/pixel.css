@@ -640,8 +640,10 @@
   width: clamp(0px, calc((100vw - 940px) / 2), 200px);
   height: 420px;
   background-image: var(--side-weave);
-  background-size: 32px 32px;
-  opacity: 0.3;
+  /* Dot every 12px, three pixels across – the tile is 8 units wide with a
+     2-unit dot, so the ratio holds whatever this is set to. */
+  background-size: 12px 12px;
+  opacity: 0.55;
   pointer-events: none;
   z-index: 0;
 }
