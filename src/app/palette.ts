@@ -54,6 +54,17 @@ export const toRgbTriplet = (hex: string): string => {
   return `${(n >> 16) & 255} ${(n >> 8) & 255} ${n & 255}`;
 };
 
+/** Mixes a hex colour toward white. 0 leaves it, 1 is white. */
+export const lighten = (hex: string, amount: number): string => {
+  const h = hex.replace("#", "");
+  const n = parseInt(h, 16);
+  const out = [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+    .map((c) => Math.round(c + (255 - c) * amount))
+    .map((c) => c.toString(16).padStart(2, "0"))
+    .join("");
+  return `#${out}`;
+};
+
 /**
  * A repeating pixel motif for the empty page either side of the set –
  * staggered dashes that read as rows of terminal text at a glance.
@@ -98,4 +109,8 @@ export const paletteVars = Object.fromEntries([
     hex,
   ]),
   ["--side-weave", dashWeave(PALETTE.blue)],
+  /* The brand blue is 2.6:1 on the near-black page – unreadable as text. A
+     tint of it keeps hue 240 exactly, so it still reads as the brand colour
+     rather than as the cyan it replaced, and clears 5.1:1. */
+  ["--c-blue-tint", lighten(PALETTE.blue, 0.35)],
 ]) as Record<string, string>;

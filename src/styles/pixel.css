@@ -334,15 +334,17 @@
   box-shadow: inset 0 0 0 2px var(--tv-edge);
 }
 
-/* The button sits lighter than the chin, never darker. Mixed toward a light
-   grey rather than toward black: a darker face works on the white shell but
-   collapses the moment the shell takes a colour – on the game-over blue it
-   left a dark button, a dark rim and a dark glyph all at about 1.6:1. Going
-   the other way, the dark rim and glyph read against it whatever the shell
-   is doing, including mid-boost. Mixed toward #d9d9d9 rather than pure white
-   so it stays a visible object on the white shell too. */
+/* A fixed grey, deliberately not mixed from the shell colour. Deriving it
+   either way went wrong: mixed toward black it vanished the moment the shell
+   took a colour (a dark button, dark rim and dark glyph at about 1.6:1 on
+   the game-over blue), and mixed toward grey it came out lavender, because
+   the brand blue is violet enough that any neutral blend leans purple.
+
+   A constant grey reads as a separate moulded part – which is what it is –
+   and keeps the dark rim and glyph legible against every shell colour,
+   boost included. */
 .tv-power {
-  background: color-mix(in srgb, var(--frame-color) 45%, #d9d9d9);
+  background: #d4d4d4;
   box-shadow: inset 0 0 0 2px var(--tv-edge);
 }
 
@@ -544,7 +546,7 @@
 }
 
 .dark .high-value {
-  color: var(--c-cyan);
+  color: var(--c-blue-tint);
 }
 
 .level-value {
