@@ -623,6 +623,56 @@
   );
 }
 
+/* Pixel weave in the two upper corners of the page.
+
+   The tile itself repeats, but a radial mask anchored to the corner thins it
+   out with distance, so it reads as a cluster that dissolves rather than as
+   wallpaper – dense where the corner is empty, gone by the time it reaches
+   the board.
+
+   The width is clamped against the viewport rather than switched at a
+   breakpoint: the board is up to 886px wide, so on anything narrower than
+   about 940px the expression goes negative, clamps to 0, and the corners
+   simply are not there – no media query to keep in step with the board. */
+.corner-weave {
+  position: absolute;
+  top: 0;
+  width: clamp(0px, calc((100vw - 940px) / 2), 200px);
+  height: 420px;
+  background-image: var(--side-weave);
+  background-size: 32px 32px;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Pitched much higher on the dark theme because the vignette lands hardest
+   exactly here – it takes the page edges down by three quarters, so a weave
+   set for the light theme is crushed to nothing in the very corners it is
+   meant to fill. There is no vignette on the light theme, so the same value
+   there would read as blue smudges on white. */
+.dark .corner-weave {
+  opacity: 0.9;
+}
+
+.corner-weave--left {
+  left: 0;
+  mask-image: radial-gradient(
+    ellipse 100% 100% at top left,
+    #000 0%,
+    transparent 80%
+  );
+}
+
+.corner-weave--right {
+  right: 0;
+  mask-image: radial-gradient(
+    ellipse 100% 100% at top right,
+    #000 0%,
+    transparent 80%
+  );
+}
+
 /* A pool of light behind the title rather than a wash over the whole page –
    sized and placed in percentages so it tracks the header at any viewport.
    Still derived from --neon so it follows the hue when the multiplier

@@ -52,6 +52,33 @@ export const toRgbTriplet = (hex: string): string => {
 };
 
 /**
+ * A repeating pixel motif for the empty page either side of the set –
+ * staggered dashes that read as rows of terminal text at a glance.
+ *
+ * Built as an SVG data URI rather than stacked CSS gradients: a gradient per
+ * dash would run to a dozen layers and none of them would be legible as a
+ * shape. `crispEdges` keeps the blocks square when the tile is scaled up.
+ */
+export const dashWeave = (color: string): string => {
+  /* x, y, length – on a 16x16 grid, four rows of three dashes, offset row to
+     row so the tile does not read as columns. */
+  const dashes: [number, number, number][] = [
+    [1, 1, 3], [6, 1, 2], [10, 1, 4],
+    [2, 5, 2], [6, 5, 4], [12, 5, 2],
+    [1, 9, 4], [7, 9, 2], [11, 9, 3],
+    [3, 13, 2], [7, 13, 3], [12, 13, 2],
+  ];
+  const rects = dashes
+    .map(([x, y, w]) => `<rect x="${x}" y="${y}" width="${w}" height="1"/>`)
+    .join("");
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" ` +
+    `viewBox="0 0 16 16" fill="${color}" shape-rendering="crispEdges">` +
+    `${rects}</svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+};
+
+/**
  * The palette as CSS custom properties, for the stylesheet to consume.
  *
  * Applied inline on the app's root element rather than written into the CSS,
@@ -67,4 +94,5 @@ export const paletteVars = Object.fromEntries([
     `--c-${name}-deep`,
     hex,
   ]),
+  ["--side-weave", dashWeave(PALETTE.blue)],
 ]) as Record<string, string>;

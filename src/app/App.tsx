@@ -39,7 +39,11 @@ export default function App() {
       style={paletteVars as CSSProperties}
       className={`neon-stage${isBoosted ? " neon-stage--boost" : ""} size-full min-h-screen flex flex-col items-center justify-center p-2 min-[375px]:p-4 sm:p-8 bg-background text-foreground`}
     >
-      <div className="flex flex-col items-center gap-4 sm:gap-12 w-full pt-2 min-[375px]:pt-4 sm:pt-8 pb-2 min-[375px]:pb-4 sm:pb-8">
+      {/* Page dressing. Sits behind the game, which is lifted above it. */}
+      <div className="corner-weave corner-weave--left" aria-hidden="true" />
+      <div className="corner-weave corner-weave--right" aria-hidden="true" />
+
+      <div className="relative z-10 flex flex-col items-center gap-4 sm:gap-12 w-full pt-2 min-[375px]:pt-4 sm:pt-8 pb-2 min-[375px]:pb-4 sm:pb-8">
         {/* Header. On a phone the controls take their own row and the title
             drops below them with the full width to itself – squeezed into a
             middle column it wrapped to five lines. From sm up it is one row
