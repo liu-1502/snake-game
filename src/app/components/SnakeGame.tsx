@@ -59,12 +59,19 @@ const CELL_SIZE = 25;
 /** One sprite pixel. Sprites are drawn on a 10-tall grid, so this fills a cell. */
 const SPRITE_UNIT = CELL_SIZE / 10;
 /** Frame is two rules with a gap between them; the wrapper reserves all three. */
-/* The set, from the outside in: a dark rim, a band of colour for the
-   moulding, and a dark line where the moulding meets the glass. */
+/* The set, from the outside in: a dark rim, the shell, then a recessed
+   inner frame that the glass sits down inside. FRAME_INNER is the dark line
+   at the glass; it is drawn over the recess rather than beside it, so it
+   costs no space of its own and is not part of the border total.
+
+   FRAME_CHIN is the deeper band along the bottom that carries the power
+   button, the way a monitor's is deeper than its sides. */
 const FRAME_EDGE = 3;
-const FRAME_BAND = 20;
-const FRAME_INNER = 3;
-const FRAME_BORDER = FRAME_EDGE + FRAME_BAND + FRAME_INNER;
+const FRAME_BAND = 13;
+const FRAME_RECESS = 12;
+const FRAME_INNER = 2;
+const FRAME_BORDER = FRAME_EDGE + FRAME_BAND + FRAME_RECESS;
+const FRAME_CHIN = 26;
 
 /**
  * Space the title, score row, d-pad and page padding take around the board –
@@ -158,7 +165,7 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
   const boardWidth = grid.width * CELL_SIZE;
   const boardHeight = grid.height * CELL_SIZE;
   const frameWidth = boardWidth + FRAME_BORDER * 2;
-  const frameHeight = boardHeight + FRAME_BORDER * 2;
+  const frameHeight = boardHeight + FRAME_BORDER * 2 + FRAME_CHIN;
 
   const initialSnake = useMemo<Position[]>(
     () => [
@@ -855,9 +862,12 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
         }`}
         style={
           {
-            padding: FRAME_BORDER,
             width: frameWidth,
             height: frameHeight,
+            paddingTop: FRAME_EDGE + FRAME_BAND,
+            paddingLeft: FRAME_EDGE + FRAME_BAND,
+            paddingRight: FRAME_EDGE + FRAME_BAND,
+            paddingBottom: FRAME_EDGE + FRAME_BAND + FRAME_CHIN,
             transform: `scale(${boardScale})`,
             transformOrigin: "top left",
             "--frame-edge": `${FRAME_EDGE}px`,
@@ -865,6 +875,17 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
           } as React.CSSProperties
         }
       >
+        {/* The inner frame. The glass sits down inside it, which is what
+            gives the set its two layers. */}
+        <div
+          className="tv-recess"
+          style={
+            {
+              padding: FRAME_RECESS,
+              "--tv-wall": `${FRAME_RECESS}px`,
+            } as React.CSSProperties
+          }
+        >
         <div
           className={`relative bg-card touch-none board-frame${
             isGameOver ? " board-shake" : ""
@@ -994,11 +1015,6 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
 
           {!isPlaying && !isGameOver && (
             /* The two lines straddle the snake, which always starts on the
-               middle cell: a gap of two and a half cells leaves it room, and
-               the half-cell shift centres that gap on the head rather than on
-               its top edge. Measured in cells so it holds at any board
-               scale. */
-            /* The two lines straddle the snake, which always starts on the
                middle cell. Each is anchored to the centre line on its own
                rather than centred as one column: the top line wraps to two
                rows on a phone, and a single centred column shifts the gap
@@ -1071,6 +1087,13 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
               </div>
             </div>
       )}
+
+        {/* Moulded into the chin, the way a monitor's is. Part of the
+            casing, not a control – nothing to press. */}
+        <span className="tv-power" aria-hidden="true">
+          <PixelIcon sprite="power" />
+        </span>
+        </div>
       </div>
       </div>
 

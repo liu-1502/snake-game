@@ -264,6 +264,7 @@
    opaque colour, not `transparent` – a transparent layer would just let the
    outer ring show through and close the gap. */
 .tv-bezel {
+  position: relative;
   /* One step of the corner staircase. Three of them turn each corner, the
      same silhouette the buttons are cut to, so the set and the controls
      look made of the same material. A border-radius would anti-alias into
@@ -335,6 +336,85 @@
 
 .dark .tv-bezel {
   --frame-color: #ffffff;
+}
+
+/* The inner frame, and the power button moulded into the chin. Both are the
+   shell's colour dropped into shadow rather than a colour of their own, so
+   they follow the shell – including through the multiplier cycle. */
+.tv-recess,
+.tv-power {
+  background: color-mix(in srgb, var(--frame-color) 78%, #000);
+  box-shadow: inset 0 0 0 2px var(--tv-edge);
+}
+
+/* The glass sits down inside the inner frame, so its top and left walls face
+   away from the light. That shadow is dithered rather than shaded: a flat
+   halftone is how a 1-bit screen shows a middle tone, and it keeps the frame
+   in the same idiom as the sprites.
+
+   `repeating-conic-gradient` is what makes the checker crisp – the usual
+   45-degree linear-gradient recipe puts a diagonal through every cell and
+   the browser anti-aliases it into grey mush. */
+.tv-recess::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-conic-gradient(
+    var(--tv-edge) 0 25%,
+    transparent 0 50%
+  );
+  background-size: 8px 8px;
+  /* An L over the two shadowed walls, mitred where it meets the lit ones. */
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    calc(100% - var(--tv-wall)) var(--tv-wall),
+    var(--tv-wall) var(--tv-wall),
+    var(--tv-wall) calc(100% - var(--tv-wall)),
+    0 100%
+  );
+}
+
+.tv-recess {
+  position: relative;
+  /* A shallower staircase than the shell's: the inner frame is a smaller
+     shape and three full-size steps would eat its corners. */
+  --tv-step: 5px;
+  clip-path: polygon(
+    calc(var(--tv-step) * 2) 0,
+    calc(100% - var(--tv-step) * 2) 0,
+    calc(100% - var(--tv-step) * 2) var(--tv-step),
+    calc(100% - var(--tv-step)) var(--tv-step),
+    calc(100% - var(--tv-step)) calc(var(--tv-step) * 2),
+    100% calc(var(--tv-step) * 2),
+    100% calc(100% - var(--tv-step) * 2),
+    calc(100% - var(--tv-step)) calc(100% - var(--tv-step) * 2),
+    calc(100% - var(--tv-step)) calc(100% - var(--tv-step)),
+    calc(100% - var(--tv-step) * 2) calc(100% - var(--tv-step)),
+    calc(100% - var(--tv-step) * 2) 100%,
+    calc(var(--tv-step) * 2) 100%,
+    calc(var(--tv-step) * 2) calc(100% - var(--tv-step)),
+    var(--tv-step) calc(100% - var(--tv-step)),
+    var(--tv-step) calc(100% - var(--tv-step) * 2),
+    0 calc(100% - var(--tv-step) * 2),
+    0 calc(var(--tv-step) * 2),
+    var(--tv-step) calc(var(--tv-step) * 2),
+    var(--tv-step) var(--tv-step),
+    calc(var(--tv-step) * 2) var(--tv-step)
+  );
+}
+
+.tv-power {
+  --u: 2px;
+  position: absolute;
+  left: 50%;
+  bottom: 7px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 7px;
+  color: var(--tv-edge);
 }
 
 .tv-bezel--boost {
