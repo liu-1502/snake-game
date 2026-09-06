@@ -98,7 +98,7 @@ export default function App() {
               <PixelIcon sprite={isMuted ? "mute" : "sound"} />
             </PixelButton>
             <PixelButton
-              color="white-gold"
+              color="white-orange"
               onClick={() => setIsDark(!isDark)}
               className="w-10 h-10 sm:w-11 sm:h-11"
               aria-label="Toggle theme"

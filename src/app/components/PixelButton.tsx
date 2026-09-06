@@ -11,7 +11,7 @@ type PixelColor =
   | "neutral"
   | "white-green"
   | "white-blue"
-  | "white-gold";
+  | "white-orange";
 
 interface PixelButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {

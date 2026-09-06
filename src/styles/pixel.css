@@ -169,9 +169,9 @@
   --light: var(--c-cyan); --ink: var(--c-cyan-deep); --outline: var(--c-cyan-deep);
 }
 
-.pixel-btn--white-gold {
+.pixel-btn--white-orange {
   --base: #ffffff; --shade: #ffffff;
-  --light: var(--c-gold); --ink: var(--c-gold-deep); --outline: var(--c-gold-deep);
+  --light: var(--c-orange); --ink: var(--c-orange-deep); --outline: var(--c-orange-deep);
 }
 
 /* On the dark theme both the icon and the outline take the neon tone of the
@@ -196,9 +196,9 @@
   --outline: var(--c-cyan);
 }
 
-.dark .pixel-btn--white-gold {
-  --ink: var(--c-gold);
-  --outline: var(--c-gold);
+.dark .pixel-btn--white-orange {
+  --ink: var(--c-orange);
+  --outline: var(--c-orange);
 }
 
 /* A pure black drop shadow vanishes on the dark board, so tint it with the

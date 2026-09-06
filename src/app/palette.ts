@@ -32,6 +32,7 @@ export const PALETTE_DEEP = {
   gold: "#b06a10",
   cyan: "#0e6d85",
   green: "#1a7a3c",
+  orange: "#a35f00",
 } as const;
 
 /** Hues the coin cycles through as you eat. */
