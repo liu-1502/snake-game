@@ -127,48 +127,11 @@
 .pixel-btn--orange  { --base: var(--c-orange); }
 .pixel-btn--green   { --base: var(--c-green); }
 .pixel-btn--brand   { --base: var(--c-brand); }
-/* Pale body, so the icon has to flip dark or it disappears. */
-.pixel-btn--white  { --base: #ffffff; --shade: #d4d4d4; --light: var(--c-blue); --ink: #2d2d2d; }
 /* Deliberately muted – for actions that shouldn't compete with the game. A
    dark grey shell rather than the white the coloured controls use: white
    pulls the eye, and quit should be findable, not prominent. The glyph stays
    white on it, at about 8:1. */
 .pixel-btn--neutral { --base: #4a4a4a; }
-
-/* White body, coloured icon and outline, one hue per action – green to
-   start over, blue for audio, sun-gold for the theme toggle.
-
-   The body is white top to bottom rather than white over a grey step: the
-   step was what made these read as grey buttons, and dropping it also lifts
-   the icon's worst-case background from #d4d4d4 to #ffffff, which is what
-   buys the brighter inks below. Depth now comes from the coloured outline
-   and the drop shadow instead of the shading band. */
-/* White body, coloured icon, and the same dark outline every other button
-   has – the colour is carried by the sprite alone.
-
-   Blue and red clear the 3:1 floor for graphics against the white body
-   comfortably – 7.8:1 and 4.6:1. The orange does not, at 2.1:1, and is kept
-   bright by choice: every tone dark enough to pass reads as brown rather
-   than as the sun it draws. */
-.pixel-btn--white-blue {
-  --base: #ffffff; --shade: #ffffff;
-  --light: var(--c-blue); --ink: var(--c-blue);
-}
-
-.pixel-btn--white-red {
-  --base: #ffffff; --shade: #ffffff;
-  --light: var(--c-red); --ink: var(--c-red);
-}
-
-.pixel-btn--white-green {
-  --base: #ffffff; --shade: #ffffff;
-  --light: var(--c-green); --ink: var(--c-green);
-}
-
-.pixel-btn--white-orange {
-  --base: #ffffff; --shade: #ffffff;
-  --light: var(--c-orange); --ink: var(--c-orange);
-}
 
 /* ---- reward sprites ----------------------------------------------------
    Pixel sprites must only ever move by whole pixels. Easing through
@@ -731,7 +694,8 @@
 }
 
 /* Stars behind the game. Dark theme only: the effect is a night sky, and on
-   the light theme white dots on a white page are nothing at all.
+   the light theme black dots on a white page read as specks on the screen
+   rather than as sky.
 
    Two layers at different tile sizes and offsets. One tile alone repeats
    visibly across a wide page however irregular its scatter; two that do not

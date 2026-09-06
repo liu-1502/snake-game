@@ -166,6 +166,16 @@ export const dust = (): string => {
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 };
 
+/** Star positions, shared by both inks so the two skies match exactly. */
+const STARS_A: [number, number, number][] = [
+  [47, 133, 1], [289, 61, 1], [412, 318, 2],
+  [133, 401, 1], [531, 247, 1], [218, 529, 1],
+];
+
+const STARS_B: [number, number, number][] = [
+  [96, 207, 1], [347, 88, 2], [201, 373, 1], [419, 441, 1],
+];
+
 /**
  * The palette as CSS custom properties, for the stylesheet to consume.
  *
@@ -195,18 +205,11 @@ export const paletteVars = Object.fromEntries([
   ["--c-brand-alert-lit-rgb", toRgbTriplet(BRAND_ALERT_LIT)],
   /* Two tiles whose sizes share no useful factor, so the combined repeat is
      far wider than any screen – with this few stars a single tile would show
-     its lattice straight away. */
-  [
-    "--starfield-a",
-    starField("#ffffff", 600, [
-      [47, 133, 1], [289, 61, 1], [412, 318, 2],
-      [133, 401, 1], [531, 247, 1], [218, 529, 1],
-    ]),
-  ],
-  [
-    "--starfield-b",
-    starField("#ffffff", 460, [
-      [96, 207, 1], [347, 88, 2], [201, 373, 1], [419, 441, 1],
-    ]),
-  ],
+     its lattice straight away.
+
+     The colour is baked into the data URI: an SVG used as a
+     background-image is its own document and cannot pick up `currentColor`
+     from the page. */
+  ["--starfield-a", starField("#ffffff", 600, STARS_A)],
+  ["--starfield-b", starField("#ffffff", 460, STARS_B)],
 ]) as Record<string, string>;
