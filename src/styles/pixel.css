@@ -159,9 +159,13 @@
    the icon's worst-case background from #d4d4d4 to #ffffff, which is what
    buys the brighter inks below. Depth now comes from the coloured outline
    and the drop shadow instead of the shading band. */
-/* Blue and red are 7.8:1 and 4.6:1 on the white body, so unlike the orange
-   they need no darker cut for the light theme – one value serves both, and
-   the icon and the outline stay the same colour in either. */
+/* One value per button, the same in both themes, so the icon and the outline
+   always read as a single colour.
+
+   Blue and red clear the 3:1 floor for graphics against the white body
+   comfortably – 7.8:1 and 4.6:1. The orange does not, at 2.1:1, and is kept
+   bright by choice: every tone dark enough to pass reads as brown rather
+   than as the sun it draws. */
 .pixel-btn--white-blue {
   --base: #ffffff; --shade: #ffffff;
   --light: var(--c-blue); --ink: var(--c-blue); --outline: var(--c-blue);
@@ -174,24 +178,7 @@
 
 .pixel-btn--white-orange {
   --base: #ffffff; --shade: #ffffff;
-  --light: var(--c-orange); --ink: var(--c-orange-deep); --outline: var(--c-orange-deep);
-}
-
-/* On the dark theme both the icon and the outline take the neon tone of the
-   matching stat – green for Level, cyan for High, gold for Score – so the
-   header echoes the readouts above the board.
-
-   Chosen for looks over measured contrast: on the white face these run
-   1.4–1.7:1, well under the 3:1 AA floor for graphics. They are 11–15:1
-   against the dark page, so the outline carries the button's shape and the
-   icon reads as a tint inside it.
-
-   The light theme keeps the deeper tones – ink and outline still matching
-   each other – because up there the outline is drawn against a white page
-   and the bright tones vanish into it entirely. */
-.dark .pixel-btn--white-orange {
-  --ink: var(--c-orange);
-  --outline: var(--c-orange);
+  --light: var(--c-orange); --ink: var(--c-orange); --outline: var(--c-orange);
 }
 
 /* A pure black drop shadow vanishes on the dark board, so tint it with the
@@ -610,7 +597,10 @@
    the screen behind them is dark, and on the light theme they would just
    smear the text. */
 .neon-stage {
-  --neon: 56 168 255;
+  /* The tube's hue. Taken from the palette's blue so the sign, the pool of
+     light behind it and the board frame all glow the same colour the snake
+     is. The multiplier cycle overrides it. */
+  --neon: var(--c-blue-rgb);
   /* Faint light lines for dark surfaces, faint dark lines for bright ones.
      Always applied as a background layer, never as an overlay – that way
      sprites and text painted on top of it stay perfectly clean. */
@@ -705,6 +695,29 @@
     0 0 14px rgb(var(--neon)),
     0 0 30px rgb(var(--neon) / 0.65);
   animation: neon-flicker 5s steps(1, end) infinite;
+  /* Hugs the lettering so the scanlines below cover the sign and not the
+     full width of the header. */
+  display: inline-block;
+  position: relative;
+}
+
+/* Everywhere else the scanlines sit behind the content, so sprites and text
+   stay clean. The sign is the exception: here they run over the glyphs,
+   which is what makes it read as light coming off a tube rather than as
+   letters with a glow placed behind them.
+
+   Lines are on whole pixels and axis-aligned, so they cut the pixel font
+   without softening its edges. */
+.dark .neon-title::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 2px,
+    rgb(0 0 0 / 0.32) 2px 4px
+  );
 }
 
 /* A tube never sits perfectly still; the dropouts are stepped, not eased. */
