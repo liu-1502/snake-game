@@ -152,6 +152,33 @@
    comfortably – 7.8:1 and 4.6:1. The orange does not, at 2.1:1, and is kept
    bright by choice: every tone dark enough to pass reads as brown rather
    than as the sun it draws. */
+/* Glyph only – no body, no bevel, no outline. The page is the ground.
+
+   That removes the pale face the glyph used to sit on, so each ink now has
+   to hold against the page itself. Blue is 2.6:1 on the dark page, which is
+   why the dark theme lifts it toward the diamond's cyan; the rest clear it
+   as they are. */
+.pixel-btn--ink-blue .pixel-btn__face,
+.pixel-btn--ink-red .pixel-btn__face,
+.pixel-btn--ink-green .pixel-btn__face,
+.pixel-btn--ink-orange .pixel-btn__face {
+  display: none;
+}
+
+.pixel-btn--ink-blue {
+  --ink: var(--c-blue);
+  --light: var(--c-blue);
+}
+
+.dark .pixel-btn--ink-blue {
+  --ink: color-mix(in srgb, var(--c-blue) 40%, var(--c-cyan));
+  --light: color-mix(in srgb, var(--c-blue) 40%, var(--c-cyan));
+}
+
+.pixel-btn--ink-red    { --ink: var(--c-red); --light: var(--c-red); }
+.pixel-btn--ink-green  { --ink: var(--c-green); --light: var(--c-green); }
+.pixel-btn--ink-orange { --ink: var(--c-orange); --light: var(--c-orange); }
+
 .pixel-btn--white-blue {
   --base: #ececec; --shade: #ececec;
   --light: var(--c-blue); --ink: var(--c-blue);
@@ -316,17 +343,15 @@
   box-shadow: inset 0 0 0 2px var(--tv-edge);
 }
 
-/* A fixed grey, deliberately not mixed from the shell colour. Deriving it
-   either way went wrong: mixed toward black it vanished the moment the shell
-   took a colour (a dark button, dark rim and dark glyph at about 1.6:1 on
-   the game-over blue), and mixed toward grey it came out lavender, because
-   the brand blue is violet enough that any neutral blend leans purple.
-
-   A constant grey reads as a separate moulded part – which is what it is –
-   and keeps the dark rim and glyph legible against every shell colour,
-   boost included. */
+/* Lighter than the shell, and mixed from it. Two earlier attempts failed:
+   toward black it vanished the moment the shell took a colour, and a fixed
+   grey read as a foreign part stuck on the casing. Mixing toward white was
+   rejected once for coming out lavender – but that was the brand blue, which
+   is violet enough that any lightening leans purple. Green, amber and the
+   boost hues all lighten cleanly, so the button now sits a shade up from
+   whatever the shell is wearing, with the dark rim and glyph over it. */
 .tv-power {
-  background: #d4d4d4;
+  background: color-mix(in srgb, var(--frame-color) 45%, #fff);
   /* Its own edge, not the shell's. The face here is a fixed light grey, so
      it always wants a dark rim – following the shell would hand it a white
      one on white the moment the set turned blue. */
