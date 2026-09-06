@@ -730,8 +730,8 @@
   );
 }
 
-/* Stars behind the game. Dark theme only: the effect is a night sky, and on
-   the light theme white dots on a white page are nothing at all.
+/* Stars behind the game, in both themes – white on the dark page, black on
+   the light one, since white dots on white would be nothing at all.
 
    Two layers at different tile sizes and offsets. One tile alone repeats
    visibly across a wide page however irregular its scatter; two that do not
@@ -746,20 +746,23 @@
 }
 
 .starfield {
-  display: none;
-  background-image: var(--starfield-a);
+  background-image: var(--starfield-a-lit);
   background-size: 600px 600px;
   opacity: 0.38;
 }
 
 .starfield::before {
-  background-image: var(--starfield-b);
+  background-image: var(--starfield-b-lit);
   background-size: 460px 460px;
   background-position: 130px 210px;
 }
 
 .dark .starfield {
-  display: block;
+  background-image: var(--starfield-a);
+}
+
+.dark .starfield::before {
+  background-image: var(--starfield-b);
 }
 
 /* The run is over: the whole machine goes to the warning colour.
@@ -780,22 +783,15 @@
   --c-brand-rgb: var(--c-brand-alert-rgb);
 }
 
-/* A pool of light behind the title rather than a wash over the whole page –
-   sized and placed in percentages so it tracks the header at any viewport.
-   Still derived from --neon so it follows the hue when the multiplier
-   cycles it. */
+/* No pool of light on the page. The glow belongs to the sign itself, and a
+   gradient behind it only lit the empty space around the lettering – with
+   the stars over it, that read as haze rather than as a tube.
+
+   The ground is a neutral near-black, not a navy: rgb(1,7,13) put a cast
+   across the whole page that looked like neon spill far from the title. */
 .dark .neon-stage {
-  /* Neutral, not a navy-black: rgb(1,7,13) put a blue cast across the whole
-     page, which read as neon spill far from the title. The glow should come
-     only from the gradient below. */
   background-color: #060606;
-  background-image:
-    var(--scanlines-on-dark),
-    radial-gradient(
-      ellipse 55% 26% at 50% 9%,
-      rgb(var(--neon) / 0.07) 0%,
-      transparent 72%
-    );
+  background-image: var(--scanlines-on-dark);
 }
 
 /* Same five colours and the same 2.5s step timing as `board-frame-cycle`,
