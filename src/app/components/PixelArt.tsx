@@ -136,17 +136,22 @@ export const coinPalette = (base: string) => ({
 
 /** Rare pickup: fixed gem colours so it always reads as the valuable one. */
 export const DIAMOND: Sprite = {
+  /* Thirteen wide over ten rows: wider than tall, the way a brilliant reads
+     side on. The taper is one step a row all the way down – the old sprite
+     held the same width for two rows in the pavilion, which put a kink in
+     one flank and not the other. Light sits upper left, so the crown runs
+     white to cyan to the deeper blue on the right. */
   rows: [
-    "..KKKKKKK..",
-    ".KWWCCCBBK.",
-    "KWWCCCBBBBK",
-    "KWCCCCBBBBK",
-    ".KCCCCBBBK.",
-    "..KCCBBBK..",
-    "...KCBBK...",
-    "...KBBBK...",
-    "....KBK....",
-    ".....K.....",
+    "..KKKKKKKKK..",
+    ".KWWCCCCCBBK.",
+    "KWWCCCCCBBBBK",
+    "KWCCCCCCBBBBK",
+    ".KCCCCCBBBBK.",
+    "..KCCCBBBBK..",
+    "...KCCBBBK...",
+    "....KCBBK....",
+    ".....KBK.....",
+    "......K......",
   ],
   palette: {
     K: OUTLINE,
