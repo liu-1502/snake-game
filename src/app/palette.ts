@@ -53,8 +53,32 @@ export const BRAND: PaletteName = "green";
  * What the brand becomes once the run is over – the set, the sign and the end
  * panel all take it at once, so the whole machine reads as having tripped
  * rather than one panel announcing it.
+ *
+ * Deliberately darker than the resting green, not merely a different hue.
+ * Green and a bright orange sit within 1.12x of each other in luminance, so
+ * the swap rode entirely on hue: simulated, the two collapse to nearly the
+ * same olive for a red-green colourblind player (1.28x apart under
+ * deuteranopia), and the state change carried nothing for them at all. At
+ * this value the two states stay 2.2x apart in normal vision, 1.9x under
+ * deuteranopia, so the set visibly dims as well as changing colour.
+ *
+ * It is `orange` taken to two thirds, not a hue of its own – same hue angle,
+ * 39 degrees, so it stays the amber the right-hand key wears rather than
+ * drifting to a red-orange.
+ *
+ * Not a palette hue, because it is not a hue the game paints things in – it
+ * is one specific signal, chosen for its distance from the resting colour.
  */
-export const BRAND_ALERT: PaletteName = "orange";
+export const BRAND_ALERT = "#a86d00";
+
+/**
+ * The same signal for the light theme, where the dim amber above reads as
+ * brown against a white page. The palette's own orange, so the alert and the
+ * right-hand key are the same colour. No luminance separation is available
+ * up here – every orange bright enough not to read brown sits within 1.2x of
+ * the resting green – so on the light theme the change rides on hue alone.
+ */
+export const BRAND_ALERT_LIT = PALETTE.orange;
 
 /** Hues the coin cycles through as you eat. */
 export const COIN_HUES = [
@@ -166,8 +190,10 @@ export const paletteVars = Object.fromEntries([
      the run as over. */
   ["--c-brand-rest", PALETTE[BRAND]],
   ["--c-brand-rest-rgb", toRgbTriplet(PALETTE[BRAND])],
-  ["--c-brand-alert", PALETTE[BRAND_ALERT]],
-  ["--c-brand-alert-rgb", toRgbTriplet(PALETTE[BRAND_ALERT])],
+  ["--c-brand-alert", BRAND_ALERT],
+  ["--c-brand-alert-rgb", toRgbTriplet(BRAND_ALERT)],
+  ["--c-brand-alert-lit", BRAND_ALERT_LIT],
+  ["--c-brand-alert-lit-rgb", toRgbTriplet(BRAND_ALERT_LIT)],
   /* Two tiles whose sizes share no useful factor, so the combined repeat is
      far wider than any screen – with this few stars a single tile would show
      its lattice straight away. */

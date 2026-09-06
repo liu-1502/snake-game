@@ -447,9 +447,15 @@
   /* Height of the title bar, and the frame around everything. */
   --win-bar: 12px;
   --win-frame: 3px;
+  /* The window boxes are holes in the bar, so they show the interior. */
+  --panel-hole: #fff;
   position: relative;
-  background: #000;
-  color: var(--c-brand);
+  /* The panel's own ink, which the rules below share. On a white interior
+     the brand itself is around 2:1 and unreadable, so that theme takes a
+     darkened cut of it; on black it can be the brand at full strength. */
+  --panel-ink: color-mix(in srgb, var(--c-brand) 62%, #000);
+  background: #fff;
+  color: var(--panel-ink);
   /* Room for the bar on top of the normal padding. */
   padding: calc(14px + var(--win-bar)) 20px 16px;
   text-align: center;
@@ -472,7 +478,7 @@
   height: var(--win-bar);
   background-color: var(--c-brand);
   background-image:
-    repeating-linear-gradient(to right, #000 0 6px, transparent 6px 10px),
+    repeating-linear-gradient(to right, var(--panel-hole) 0 6px, transparent 6px 10px),
     var(--dust);
   background-size: 26px 6px, auto;
   background-position: right 5px center, top left;
@@ -488,7 +494,7 @@
 .panel-rule {
   --dash: repeating-linear-gradient(
     to right,
-    color-mix(in srgb, var(--c-brand) 45%, transparent) 0 6px,
+    color-mix(in srgb, var(--panel-ink) 45%, transparent) 0 6px,
     transparent 6px 10px
   );
   background-image: var(--dash), var(--dash);
@@ -500,9 +506,15 @@
 .panel-divider {
   background-image: repeating-linear-gradient(
     to bottom,
-    color-mix(in srgb, var(--c-brand) 45%, transparent) 0 6px,
+    color-mix(in srgb, var(--panel-ink) 45%, transparent) 0 6px,
     transparent 6px 10px
   );
+}
+
+.dark .game-over-panel {
+  --panel-ink: var(--c-brand);
+  --panel-hole: #000;
+  background: #000;
 }
 
 @media (min-width: 640px) {
@@ -736,8 +748,20 @@
   display: block;
 }
 
-/* The run is over: the whole machine goes to the warning colour. */
+/* The run is over: the whole machine goes to the warning colour.
+
+   Two values. The dark theme takes the dimmer amber, which puts the two
+   states 2.2x apart in luminance and keeps the change readable without
+   colour vision. The light theme takes a bright orange instead: against a
+   white page the dim amber reads as brown. That costs the luminance
+   separation up there – bright orange and the green sit within 1.2x however
+   they are picked – so on the light theme the swap rides on hue alone. */
 .neon-stage--over {
+  --c-brand: var(--c-brand-alert-lit);
+  --c-brand-rgb: var(--c-brand-alert-lit-rgb);
+}
+
+.dark .neon-stage--over {
   --c-brand: var(--c-brand-alert);
   --c-brand-rgb: var(--c-brand-alert-rgb);
 }
