@@ -136,36 +136,14 @@ export const coinPalette = (base: string) => ({
 
 /** Rare pickup: fixed gem colours so it always reads as the valuable one. */
 export const DIAMOND: Sprite = {
-  /* Cut like a gem rather than shaded like a ball: a flat table across the
-     top, one hard girdle line the full width, and facet lines running down
-     the pavilion to the point. The old sprite graded smoothly from light to
-     dark, which at eleven pixels across reads as a blurred sphere – it is
-     the flat planes meeting at hard lines that say faceted at this size.
-
-     Two facet lines down the crown, separating the table from the shoulder
-     either side – that pair is what makes a drawn gem read as cut rather
-     than as a blob with a line through it. They appear only on the two rows
-     where the crown is wider than the table, which is where a shoulder
-     exists at all.
-
-     One facet line down the pavilion, not three: at this size three of them
-     eat more of the stone than they describe.
-
-     Twelve rows rather than ten, for the girdle's sake. It is one pixel
-     either way, but one in ten reads as a bar across the middle and one in
-     twelve reads as a line between two masses – the crown and the pavilion
-     need enough rows of their own for it to sit between them. Still eleven
-     wide, so the footprint in the cell is unchanged. */
   rows: [
-    "...KKKKK...",
-    "..KCCCCCK..",
-    ".KCCCCCWWK.",
-    "KCKCCCCCKCK",
-    "KCKCCCCCKCK",
-    "KKKKKKKKKKK",
-    "KBBBBKBBBBK",
-    ".KBBBKBBBK.",
-    "..KBBKBBK..",
+    "..KKKKKKK..",
+    ".KWWCCCBBK.",
+    "KWWCCCBBBBK",
+    "KWCCCCBBBBK",
+    ".KCCCCBBBK.",
+    "..KCCBBBK..",
+    "...KCBBK...",
     "...KBBBK...",
     "....KBK....",
     ".....K.....",
