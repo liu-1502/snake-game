@@ -666,100 +666,36 @@
   );
 }
 
-/* Halftone dots rising off the foot of the page – a separate piece of
-   dressing from the corner weave above, and a different motif: dots, not
-   dashes.
+/* Stars behind the game. Dark theme only: the effect is a night sky, and on
+   the light theme white dots on a white page are nothing at all.
 
-   Two grids, not one. A halftone gets its gradient from the dots changing
-   size, so a fine grid runs the full height and a coarse one sits only along
-   the bottom, its spacing an exact multiple of the fine one so the big dots
-   land on top of small ones and read as the same dot growing. Fading a
-   single even grid would only make it dimmer, which is a different effect
-   and not a pixel one. */
-.bottom-dots {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 55%;
-  background-image: var(--bottom-dots);
-  background-size: 12px 12px;
-  opacity: 0.18;
-  pointer-events: none;
-  z-index: -1;
-  mask-image: linear-gradient(to top, #000 0%, transparent 85%);
-}
-
-/* The coarse grid. Its own fade compounds with the parent's, so it dies out
-   well before the fine dots do. */
-.bottom-dots::before {
+   Two layers at different tile sizes and offsets. One tile alone repeats
+   visibly across a wide page however irregular its scatter; two that do not
+   share a factor push the combined repeat past the width of any screen. */
+.starfield,
+.starfield::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: var(--bottom-dots);
-  background-size: 24px 24px;
-  mask-image: linear-gradient(to top, #000 0%, transparent 45%);
-}
-
-.dark .bottom-dots {
-  /* Below the corners' 0.9 – same hue, carried lighter, which is what keeps
-     it behind the game instead of competing with it. Still well up because
-     the vignette takes the page edges down by three quarters, and the foot
-     is one of them. */
-  opacity: 0.55;
-}
-
-/* Pixel weave in the two upper corners of the page.
-
-   The tile itself repeats, but a radial mask anchored to the corner thins it
-   out with distance, so it reads as a cluster that dissolves rather than as
-   wallpaper – dense where the corner is empty, gone by the time it reaches
-   the board.
-
-   The width is clamped against the viewport rather than switched at a
-   breakpoint: the board is up to 886px wide, so on anything narrower than
-   about 940px the expression goes negative, clamps to 0, and the corners
-   simply are not there – no media query to keep in step with the board. */
-.corner-weave {
-  position: absolute;
-  top: 0;
-  width: clamp(0px, calc((100vw - 940px) / 2), 200px);
-  height: 420px;
-  background-image: var(--side-weave);
-  background-size: 32px 32px;
-  opacity: 0.3;
   pointer-events: none;
-  /* Negative, so it paints over the stage's own background but under the
-     game – which lets the game stay in the root stacking context and keeps
-     `.above-crt` able to out-rank the vignette. */
   z-index: -1;
 }
 
-/* Pitched much higher on the dark theme because the vignette lands hardest
-   exactly here – it takes the page edges down by three quarters, so a weave
-   set for the light theme is crushed to nothing in the very corners it is
-   meant to fill. There is no vignette on the light theme, so the same value
-   there would read as blue smudges on white. */
-.dark .corner-weave {
-  opacity: 0.9;
+.starfield {
+  display: none;
+  background-image: var(--starfield-a);
+  background-size: 600px 600px;
+  opacity: 0.38;
 }
 
-.corner-weave--left {
-  left: 0;
-  mask-image: radial-gradient(
-    ellipse 100% 100% at top left,
-    #000 0%,
-    transparent 80%
-  );
+.starfield::before {
+  background-image: var(--starfield-b);
+  background-size: 460px 460px;
+  background-position: 130px 210px;
 }
 
-.corner-weave--right {
-  right: 0;
-  mask-image: radial-gradient(
-    ellipse 100% 100% at top right,
-    #000 0%,
-    transparent 80%
-  );
+.dark .starfield {
+  display: block;
 }
 
 /* A pool of light behind the title rather than a wash over the whole page –

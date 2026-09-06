@@ -55,59 +55,33 @@ export const toRgbTriplet = (hex: string): string => {
 };
 
 /**
- * A repeating pixel motif for the empty page either side of the set –
- * staggered dashes that read as rows of terminal text at a glance.
+ * A starfield tile – scattered single pixels, with the odd two-pixel one.
  *
- * Built as an SVG data URI rather than stacked CSS gradients: a gradient per
- * dash would run to a dozen layers and none of them would be legible as a
- * shape. `crispEdges` keeps the blocks square when the tile is scaled up.
+ * The positions are written out rather than generated. `Math.random()` would
+ * reshuffle the sky on every load, and an even grid reads as a grid however
+ * small the dots get; only an irregular scatter reads as stars.
+ *
+ * Density is the whole game here: about one star per 30,000 square pixels,
+ * which is roughly a clear night. Twice that and it stops looking like a sky
+ * and starts looking like noise. The tiles below are large and hold few
+ * stars each for exactly that reason.
+ *
+ * An SVG data URI rather than CSS gradients: a gradient dot has a soft edge,
+ * and at one pixel across that is a smudge, not a star.
  */
-export const dashWeave = (color: string): string => {
-  /* x, y, length – on a 16x16 grid, four rows of three dashes, offset row to
-     row so the tile does not read as columns. */
-  const dashes: [number, number, number][] = [
-    [1, 1, 3], [6, 1, 2], [10, 1, 4],
-    [2, 5, 2], [6, 5, 4], [12, 5, 2],
-    [1, 9, 4], [7, 9, 2], [11, 9, 3],
-    [3, 13, 2], [7, 13, 3], [12, 13, 2],
-  ];
-  const rects = dashes
-    .map(([x, y, w]) => `<rect x="${x}" y="${y}" width="${w}" height="1"/>`)
+export const starField = (
+  color: string,
+  tile: number,
+  /** x, y, size */
+  stars: readonly [number, number, number][],
+): string => {
+  const rects = stars
+    .map(([x, y, n]) => `<rect x="${x}" y="${y}" width="${n}" height="${n}"/>`)
     .join("");
   const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" ` +
-    `viewBox="0 0 16 16" fill="${color}" shape-rendering="crispEdges">` +
-    `${rects}</svg>`;
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-};
-
-/** Mixes two hex colours. `t` of 0 is `a`, 1 is `b`. */
-export const mix = (a: string, b: string, t: number): string => {
-  const parse = (hex: string) => {
-    const n = parseInt(hex.replace("#", ""), 16);
-    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-  };
-  const [x, y] = [parse(a), parse(b)];
-  return `#${x
-    .map((c, i) => Math.round(c * (1 - t) + y[i] * t))
-    .map((c) => c.toString(16).padStart(2, "0"))
-    .join("")}`;
-};
-
-/**
- * A halftone dot field – a plain square-dot grid that the stylesheet's mask
- * then fades out, giving the density falloff.
- *
- * Drawn as an SVG data URI rather than a CSS radial-gradient because a
- * gradient dot has a soft edge: at three pixels across it reads as a blur
- * instead of a pixel. The tile is 8 units with a 2-unit dot, so the dot stays
- * three-eighths of the spacing whatever `background-size` is set to.
- */
-export const dotField = (color: string): string => {
-  const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" ` +
-    `viewBox="0 0 8 8" fill="${color}" shape-rendering="crispEdges">` +
-    `<rect x="0" y="0" width="2" height="2"/></svg>`;
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${tile}" ` +
+    `height="${tile}" viewBox="0 0 ${tile} ${tile}" fill="${color}" ` +
+    `shape-rendering="crispEdges">${rects}</svg>`;
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 };
 
@@ -127,9 +101,20 @@ export const paletteVars = Object.fromEntries([
     `--c-${name}-deep`,
     hex,
   ]),
-  ["--side-weave", dashWeave(PALETTE.blue)],
-  /* The same brand blue the corner weave uses – the two are one family of
-     page dressing. It reads paler than the corners because the stylesheet
-     runs it at a lower opacity, not because the hue differs. */
-  ["--bottom-dots", dotField(PALETTE.blue)],
+  /* Two tiles whose sizes share no useful factor, so the combined repeat is
+     far wider than any screen – with this few stars a single tile would show
+     its lattice straight away. */
+  [
+    "--starfield-a",
+    starField("#ffffff", 600, [
+      [47, 133, 1], [289, 61, 1], [412, 318, 2],
+      [133, 401, 1], [531, 247, 1], [218, 529, 1],
+    ]),
+  ],
+  [
+    "--starfield-b",
+    starField("#ffffff", 460, [
+      [96, 207, 1], [347, 88, 2], [201, 373, 1], [419, 441, 1],
+    ]),
+  ],
 ]) as Record<string, string>;
