@@ -959,6 +959,25 @@
   z-index: 50;
 }
 
+/* The board is limited by the width of a phone screen, not its height, so
+   once it has been sized there is height left over. The content hugs the top
+   and keeps its own 24px rhythm; the leftover falls below the board, above
+   the pinned bar, rather than being pushed into one of the gaps.
+
+   It cannot be removed by layout – only by the board growing, which needs
+   fewer columns than the seventeen it has. */
+@media (max-width: 639px) {
+  .page-column {
+    /* Exactly the bar's height, and the stage's own bottom padding is zeroed
+       on this breakpoint – anything left there stacks on top of it. */
+    padding-bottom: 72px;
+  }
+
+  .board-row {
+    margin-bottom: 24px;
+  }
+}
+
 /* The vignette reaches 75% black at the edges, and the header buttons sit in
    a corner – it was laying three quarters of a black wash over them while the
    d-pad, nearer the middle, took under half. Controls belong above a

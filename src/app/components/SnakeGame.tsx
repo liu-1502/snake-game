@@ -85,7 +85,7 @@ const CHROME_HEIGHT = 348;
 const DPAD_BAR = 72;
 
 /** Breathing room between the board and that bar. */
-const BOARD_GAP = 12;
+const BOARD_GAP = 24;
 
 const HIGH_SCORE_KEY = "snake-high-score";
 // Starts as a bare head; every heart eaten adds one segment.
@@ -818,7 +818,7 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
   /* One 16px gap for the whole column, so the score row sits the same
      distance above the board as the d-pad sits below it. */
   return (
-    <div className="flex flex-col items-center gap-6 w-full">
+    <div className="game-column flex flex-col items-center gap-6 w-full">
       <div
         /* Stats stay centred whether or not the hint is showing – with
            justify-between the hint's presence shunted them left. */
@@ -873,7 +873,7 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
         </div>
       </div>
 
-      <div ref={boardFitRef} className="w-full flex justify-center">
+      <div ref={boardFitRef} className="board-row w-full flex justify-center">
       {/* Overlays live here rather than inside the board: the board is
           scaled to fit, so anything inside it shrinks with it – on a phone
           the game-over text came out at 11px and the hint at 4px. This box
