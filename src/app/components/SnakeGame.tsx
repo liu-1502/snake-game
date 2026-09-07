@@ -822,7 +822,11 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
       <div
         /* Stats stay centred whether or not the hint is showing – with
            justify-between the hint's presence shunted them left. */
-        className="relative flex items-center justify-center w-full px-2 sm:px-0 text-[8px] sm:text-[16px]"
+        /* 10px on a phone, not 12: the row is 224px wide at 8px inside a
+           327px bar, so 10 lands at 280 and 12 at 336, which overflows. Not a
+           multiple of eight, so the glyph grid only falls on whole pixels at
+           2x and up – which is every phone this will meet. */
+        className="relative flex items-center justify-center w-full px-2 sm:px-0 text-[10px] sm:text-[16px]"
         style={{ maxWidth: frameWidth * boardScale }}
       >
         <div className="flex items-center gap-2 sm:gap-4">
