@@ -893,45 +893,9 @@
     0 0 9px rgb(var(--neon) / 0.45),
     0 0 20px rgb(var(--neon) / 0.25);
   animation: neon-flicker 5s steps(1, end) infinite;
-  /* Hugs the lettering so the scanlines below cover the sign and not the
-     full width of the header. */
+  /* Hugs the lettering rather than filling the header's width, so the glow
+     is measured from the words. */
   display: inline-block;
-  position: relative;
-}
-
-/* Everywhere else the scanlines sit behind the content, so sprites and text
-   stay clean. The sign is the exception: here they run over the glyphs,
-   which is what makes it read as light coming off a tube rather than as
-   letters with a glow placed behind them.
-
-   The lines are clipped to the lettering rather than laid over the element:
-   across the whole box they cut the glow as well, and the halo picks up a
-   rectangle around the words. That means a second copy of the text – it
-   comes from `data-text` on the heading – painted in the gradient with the
-   glyphs as the clip and no colour of its own, so only the strokes take a
-   line.
-
-   Lines are on whole pixels and axis-aligned, so they cut the pixel font
-   without softening its edges. */
-.dark .neon-title::after {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  /* One pixel of line every four. At two in four the lettering is half
-     covered and the strokes start to break up rather than just carry a
-     line across them. */
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0 3px,
-    rgb(0 0 0 / 0.32) 3px 4px
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  /* The glow belongs to the heading itself; repeating it here would double
-     it and bleed past the strokes again. */
-  text-shadow: none;
 }
 
 /* A tube never sits perfectly still; the dropouts are stepped, not eased. */
