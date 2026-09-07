@@ -959,22 +959,25 @@
   z-index: 50;
 }
 
-/* The board is limited by the width of a phone screen, not its height, so
-   once it has been sized there is height left over. The content hugs the top
-   and keeps its own 24px rhythm; the leftover falls below the board, above
-   the pinned bar, rather than being pushed into one of the gaps.
 
-   It cannot be removed by layout – only by the board growing, which needs
-   fewer columns than the seventeen it has. */
+
+/* The vignette reaches 75% black at the edges, and the header buttons sit in
+   a corner – it was laying three quarters of a black wash over them while the
+   d-pad, nearer the middle, took under half. Controls belong above a
+   decorative screen effect, so they opt out of it; the board keeps the CRT
+   falloff. */
+.above-crt {
+  position: relative;
+  z-index: 51;
+}
+
+/* On a phone the d-pad sits directly under the board with 24px between them,
+   which the column's own rhythm supplies – so no padding above the keys, or
+   it would stack on that gap and read as 36. The 16px either side stays: it
+   is what keeps the outer keys off the edge of a narrow screen. */
 @media (max-width: 639px) {
-  .page-column {
-    /* Exactly the bar's height, and the stage's own bottom padding is zeroed
-       on this breakpoint – anything left there stacks on top of it. */
-    padding-bottom: 72px;
-  }
-
-  .board-row {
-    margin-bottom: 24px;
+  .dpad {
+    padding: 0 16px;
   }
 }
 
@@ -988,30 +991,6 @@
   z-index: 51;
 }
 
-/* On a phone the d-pad is pinned to the foot of the screen rather than sitting
-   at the end of the page. It is the one control you need while playing, and in
-   flow it fell off the bottom on shorter viewports – measured, seven pixels
-   past the fold on a 400x801 screen.
-
-   Its own black ground, so the board can run right up behind it without the
-   keys sitting on the playfield. Phones only: from sm the page is short
-   enough that the bar would just float over empty space.
-
-   Placed after `.above-crt`, which sets `position: relative` on this same
-   element – at equal specificity the later rule is the one that lands. */
-@media (max-width: 639px) {
-  .dpad {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    justify-content: center;
-    padding: 12px 16px;
-    background: #000;
-    /* Same layer as the other controls, above the CRT vignette. */
-    z-index: 51;
-  }
-}
 
 
 .dark .crt-vignette {

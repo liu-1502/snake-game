@@ -80,9 +80,9 @@ const FRAME_CHIN = 26;
  */
 const CHROME_HEIGHT = 348;
 
-/* The d-pad bar pinned to the foot of a phone screen: 12px of padding, a
-   48px key, 12px again. Kept here because the board's fit has to reserve it. */
-const DPAD_BAR = 72;
+/* The d-pad row on a phone: a 48px key, plus the 24px gap above it, which
+   BOARD_GAP carries. Kept here because the board's fit has to leave room. */
+const DPAD_BAR = 48;
 
 /** Breathing room between the board and that bar. */
 const BOARD_GAP = 24;
@@ -264,9 +264,10 @@ export const SnakeGame = forwardRef<SnakeGameRef, SnakeGameProps>(({ onGameOverC
     if (!element) return;
 
     const fit = () => {
-      /* On a phone the d-pad is pinned to the foot of the screen, so the
-         height left for the board is whatever sits between the top of this
-         box and that bar. Measured rather than taken from CHROME_HEIGHT:
+      /* On a phone the d-pad follows the board in the flow, so the height
+         left for it is whatever sits between the top of this box and the
+         foot of the screen, less the keys and the gap above them. Measured
+         rather than taken from CHROME_HEIGHT:
          the chrome above varies with the device's width – the title wraps,
          the stats row does not – and a constant was leaving the d-pad a few
          pixels off-screen on some sizes. The page is top-aligned there, so
